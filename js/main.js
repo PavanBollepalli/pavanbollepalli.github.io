@@ -1,6 +1,7 @@
 (function () {
   "use strict";
 
+  document.documentElement.classList.add("js");
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,12 +28,12 @@
     }
     const log = $("#bootLog"), bar = $("#bootBar");
     const lines = [
-      ["$ uvicorn portfolio.main:app --workers 4", ""],
-      ["connecting postgres://pgvector … ", "ok"],
-      ["loading HNSW index (1024-d) … ", "ok"],
-      ["warming in-memory cache … ", "ok"],
-      ["compiling GLSL shaders … ", "ok"],
-      ["Application startup complete.", ""],
+      ["pavan.bollepalli / portfolio visual intro", ""],
+      ["Flash Resume · evidence-led AI tooling", ""],
+      ["SkillVector · RAG + hybrid retrieval", ""],
+      ["Wikimedia · open-source contributions", ""],
+      ["loading 3D presentation …", ""],
+      ["Backend engineering. AI with boundaries.", ""],
     ];
     for (let i = 0; i < lines.length; i++) {
       const d = document.createElement("div");
@@ -63,7 +64,7 @@
       entries.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
       });
-    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    }, { threshold: 0.01, rootMargin: "0px 0px -6% 0px" });
     revealEls.forEach((el) => { if (!el.closest(".hero")) io.observe(el); });
   }
   observeReveals();
@@ -100,6 +101,13 @@
     menu.hidden = open;
   });
   $$("a", menu).forEach((a) => a.addEventListener("click", () => { menu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); }));
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !menu.hidden) {
+      menu.hidden = true;
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.focus();
+    }
+  });
 
   /* ---------- Typewriter ---------- */
   function startTyper() {
@@ -209,7 +217,7 @@
 
     const scripts = {
       warm: {
-        scale: 1, end: 0.48, note: "warm path · real time",
+        scale: 1, end: 0.48, note: "simulated warm retrieval · not full generation",
         steps: [
           [0, "req", "hit", null, 'POST /roadmap {target_role: "ML Engineer"}', "info"],
           [0.03, "lock", "pass", 0, "lock acquired → key=hash(user, role)"],
@@ -258,7 +266,7 @@
       runTimer(s.scale, s.end, id);
       let prev = 0;
       for (const [at, node, cls, wire, msg, mcls] of s.steps) {
-        await sleep(((at - prev) / s.scale) * 1000 * (mode === "warm" || mode === "dupe" ? 2.2 : 1));
+        await sleep(((at - prev) / s.scale) * 1000);
         if (id !== runId) return;
         prev = at;
         if (wire !== null && wire !== undefined) wires[wire].classList.add("flow");
@@ -272,7 +280,10 @@
     }
 
     $$(".seg-btn", rag).forEach((b) => b.addEventListener("click", () => {
-      $$(".seg-btn", rag).forEach((x) => x.classList.toggle("is-active", x === b));
+      $$(".seg-btn", rag).forEach((x) => {
+        x.classList.toggle("is-active", x === b);
+        x.setAttribute("aria-pressed", String(x === b));
+      });
       run(b.dataset.mode);
     }));
 
@@ -280,6 +291,82 @@
       if (e[0].isIntersecting) { rio.disconnect(); run("warm"); }
     }, { threshold: 0.5 });
     rio.observe(rag);
+  }
+
+  const flashDemo = $("[data-flash-demo]");
+  if (flashDemo) {
+    const scenario = $("[data-flash-scenario]", flashDemo);
+    const modeButtons = $$("[data-flash-mode]", flashDemo);
+    const evidence = $("[data-flash-evidence]", flashDemo);
+    const decisions = $("[data-flash-decisions]", flashDemo);
+    const note = $("[data-flash-note]", flashDemo);
+    let mode = "truthful";
+    const samples = {
+      backend: {
+        evidence: ["Built Python services with FastAPI", "Queried PostgreSQL through REST APIs", "No Kubernetes experience documented"],
+        requirements: [
+          ["FastAPI", "covered", "Explicit framework evidence → eligible for tailoring."],
+          ["PostgreSQL", "covered", "Documented database use → eligible for tailoring."],
+          ["Kubernetes", "unsupported", "No source evidence → excluded from normal claims."],
+        ],
+        note: "Supported wording may change. Unsupported experience does not become a qualification.",
+      },
+      compound: {
+        evidence: ["Built supervised classification models", "Used unsupervised clustering in Python", "No reinforcement learning work documented"],
+        requirements: [
+          ["Python", "covered", "Explicit language evidence → eligible for tailoring."],
+          ["Supervised, unsupervised AND reinforcement learning", "partial", "Two of three components have evidence. The whole requirement is not fully covered."],
+          ["Reinforcement learning", "unsupported", "The missing component cannot be inserted into experience."],
+        ],
+        note: "Partial credit is not full coverage. A compound requirement must retain its unsupported component.",
+      },
+      adjacent: {
+        evidence: ["Built command-line utilities in Python", "No FastAPI project documented", "No production web framework experience documented"],
+        requirements: [
+          ["Python", "covered", "Existing language evidence → eligible for tailoring."],
+          ["FastAPI", "unsupported", "Python alone is not evidence of having built FastAPI services."],
+          ["Production FastAPI experience", "unsupported", "An adjacent foundation cannot establish production experience."],
+        ],
+        note: "Truthful mode keeps FastAPI out of normal claims when only Python is documented.",
+      },
+    };
+    function renderFlashDemo() {
+      const sample = samples[scenario.value];
+      evidence.replaceChildren(...sample.evidence.map((text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        return li;
+      }));
+      decisions.replaceChildren(...sample.requirements.map(([requirement, status, reason]) => {
+        if (scenario.value === "adjacent" && mode === "interview" && requirement === "FastAPI") {
+          status = "familiarity";
+          reason = "Candidate for a separate Familiarity section only; review honestly before using it.";
+        }
+        const row = document.createElement("div"), name = document.createElement("strong"), badge = document.createElement("span"), detail = document.createElement("small");
+        row.className = "flash-decision";
+        name.textContent = requirement;
+        badge.className = "evidence-status " + status;
+        badge.textContent = { covered: "Covered", partial: "Partial", unsupported: "Unsupported", familiarity: "Familiarity only" }[status];
+        detail.textContent = reason;
+        row.append(name, badge, detail);
+        return row;
+      }));
+      modeButtons.forEach((button) => {
+        const active = button.dataset.flashMode === mode;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      $("[data-flash-mode-label]", flashDemo).textContent = mode === "truthful" ? "Truthful mode" : "Interview prep mode";
+      note.textContent = scenario.value === "adjacent" && mode === "interview"
+        ? "Familiarity is separately labeled, never merged into experience. Only include skills you can discuss honestly."
+        : sample.note;
+    }
+    scenario.addEventListener("change", renderFlashDemo);
+    modeButtons.forEach((button) => button.addEventListener("click", () => {
+      mode = button.dataset.flashMode;
+      renderFlashDemo();
+    }));
+    renderFlashDemo();
   }
 
   /* ---------- API playground ---------- */
@@ -301,16 +388,24 @@
         impact: ["~25% faster SQL via composite indexes + query restructuring", "Python + Streamlit + MySQL community insights dashboard", "Reusable, unit-tested Python query modules", "Merged into main repo after international code review"],
       }],
       projects: [
-        { name: "SkillVector", type: "AI career intelligence", impact: "RAG latency 9.6s → 0.48s (−95%)", stack: ["FastAPI", "pgvector", "Llama 3.3 70B", "Next.js 16"], live: "https://skill-vector-kyzv.vercel.app" },
-        { name: "Flash Resume", type: "local-first AI CLI + Chrome ext", impact: "3 min → <10s per application, ~80% fewer tokens", stack: ["Python", "FastAPI", "Typst", "GitHub Actions"], pypi: "https://pypi.org/project/flash-resume/" },
-        { name: "CodeAtlas", type: "codebase RAG", impact: "AST-aware chunking with tree-sitter + streamed answers", stack: ["FastAPI", "ChromaDB", "Mistral"], repo: "https://github.com/PavanBollepalli/CodeAtlas" },
+        {
+          name: "Flash Resume", type: "evidence-led local-first CLI + browser extension", status: "published_on_pypi",
+          architecture: ["Parallel core + project plans", "Deterministic evidence matching", "Sanitized edits", "Typst compilation + pypdf verification"],
+          outputs: ["Company_Role.pdf", "Company_Role.diff.md"],
+          modes: { truthful: "supported evidence only", interview_prep: "separate, clearly labeled familiarity; not production experience" },
+          tests: { count: 44, source: "supplied README; not rerun by this portfolio" },
+          limitations: ["Coverage score is not an external ATS guarantee", "Local-first, not offline", "Windows background autostart", "Imported resumes need review"],
+          stack: ["Python", "FastAPI", "Typst", "pypdf", "Chrome MV3", "Gemini / Groq"],
+          pypi: "https://pypi.org/project/flash-resume/", repo: "https://github.com/PavanBollepalli/flash-resume",
+        },
+        { name: "SkillVector", type: "AI career intelligence", impact: "Warm-query RAG latency 9.6s → 0.48s (−95%); not total LLM generation time", stack: ["FastAPI", "pgvector", "Llama 3.3 70B", "Next.js 16"], live: "https://skill-vector-kyzv.vercel.app" },
       ],
       roadmap: {
         disclaimer: "Planned concepts, not shipped claims. Scope may change after user discovery.",
         next: { name: "Retrieval Eval Lab", focus: "RAG evaluation infrastructure", targets: ["Recall@K + MRR", "faithfulness", "latency traces", "CI experiment reports"] },
         queue: [
-          { name: "Guardrail Runtime", focus: "reliable tool-using agents", stage: "architecture" },
-          { name: "Context Mesh", focus: "multimodal retrieval with citations", stage: "research" },
+          { name: "Guardrail Runtime", focus: "reliable tool-using agents", stage: "proposed_concept" },
+          { name: "Context Mesh", focus: "multimodal retrieval with citations", stage: "proposed_concept" },
         ],
       },
       skills: {
@@ -327,116 +422,248 @@
         { name: "ACM Programming Contest", result: "1st place", participants: "200+" },
       ],
       hire: {
-        status: 201, message: "Interview request created. Thanks for reaching out!",
+        simulation: true, message_sent: false,
+        message: "This explorer does not submit interview requests. Email me to start a conversation.",
         next_step: `mailto:${EMAIL}`,
         linkedin: "https://linkedin.com/in/PavanBollepalli",
         github: "https://github.com/PavanBollepalli",
         resume: "/" + RESUME,
-        response_time: "fast",
       },
     };
     const paths = {
-      profile: "GET /v1/profile", experience: "GET /v1/experience", projects: "GET /v1/projects?sort=impact",
+      profile: "GET /v1/profile", experience: "GET /v1/experience", projects: "GET /v1/projects",
       roadmap: "GET /v1/roadmap", skills: "GET /v1/skills", certs: "GET /v1/certifications", hire: "POST /v1/hire",
     };
     const reqEl = $("[data-api-req]", api), stEl = $("[data-api-status]", api), msEl = $("[data-api-ms]", api), resEl = $("[data-api-res]", api);
-    let apiRun = 0;
+    const composer = $("[data-api-composer]", api), methodEl = $("[data-api-method]", api), pathEl = $("[data-api-path]", api), bodyEl = $("[data-api-body]", api);
+    const tabs = $$("[data-api-view]", api), copyEl = $("[data-api-copy]", api), bytesEl = $("[data-api-bytes]", api);
+    const requestHistory = [];
+    const views = { body: "Choose an endpoint or run a query to inspect its response.", headers: "No response yet.", request: "No request yet." };
+    let requestCount = 0, view = "body", bodyIsJSON = false;
 
     const highlight = (json) => json.replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d+)?/g, (m, str, colon, bool) => {
       if (str) return colon ? `<span class="k">${esc(str)}</span>${colon}` : `<span class="s">${esc(str)}</span>`;
       return `<span class="${bool ? "b" : "n"}">${m}</span>`;
     });
 
-    async function renderLines(html, id) {
-      const lines = html.split("\n");
-      resEl.innerHTML = "";
-      const step = Math.max(1, Math.ceil(lines.length / 24));
-      for (let i = 0; i < lines.length; i += step) {
-        if (id !== apiRun) return;
-        resEl.innerHTML += lines.slice(i, i + step).join("\n") + (i + step < lines.length ? "\n" : "");
-        if (!reduced) await sleep(16);
+    function renderView() {
+      const active = tabs.find((tab) => tab.dataset.apiView === view);
+      tabs.forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab === active));
+        tab.tabIndex = tab === active ? 0 : -1;
+      });
+      tabs[0].textContent = bodyIsJSON ? "JSON" : "Output";
+      resEl.setAttribute("aria-labelledby", active.id);
+      resEl.innerHTML = view === "body" && bodyIsJSON ? highlight(views.body) : esc(views[view]);
+      resEl.scrollTop = 0;
+      if (!copyEl.disabled) copyEl.textContent = "Copy " + (view === "body" ? bodyIsJSON ? "JSON" : "output" : view === "headers" ? "headers" : "request");
+    }
+
+    function resolveRequest(method, path, body) {
+      let endpoint;
+      const fail = (status, reason, code, message) => ({ status, reason, endpoint, payload: { error: { code, message } } });
+      if (path.length > 2048 || /[\s#]/.test(path) || !/^\/v1\/[a-z]+(?:\?.*)?$/.test(path)) {
+        return fail(400, "Bad Request", "invalid_path", "Use a /v1/endpoint path with URL-encoded query values. External URLs are not accepted.");
       }
+      const [route, query = ""] = path.split(/\?(.*)/s);
+      endpoint = Object.keys(paths).find((key) => paths[key].split(" ")[1] === route);
+      if (!endpoint) return fail(404, "Not Found", "route_not_found", "Choose a route from the endpoint collection.");
+      const expected = paths[endpoint].split(" ")[0];
+      if (method !== expected) return { ...fail(405, "Method Not Allowed", "method_not_allowed", `Use ${expected} for ${route}.`), allow: expected };
+      const params = new URLSearchParams(query);
+      const allowed = method === "POST" ? [] : Array.isArray(data[endpoint]) ? ["q", "fields", "limit"] : ["fields"];
+      for (const key of params.keys()) {
+        if (!allowed.includes(key) || params.getAll(key).length !== 1) {
+          return fail(400, "Bad Request", "invalid_query", `Unsupported or repeated parameter: ${key}. Allowed: ${allowed.join(", ") || "none"}.`);
+        }
+      }
+      if (method === "POST") {
+        let preview;
+        try { preview = JSON.parse(body); } catch { return fail(400, "Bad Request", "invalid_json", "The request body must be valid JSON."); }
+        if (!preview || typeof preview !== "object" || Array.isArray(preview) || body.length > 4096 || Object.keys(preview).some((key) => !["role", "message"].includes(key))) {
+          return fail(400, "Bad Request", "invalid_body", "Use a JSON object with optional role and message strings. This is a preview, not a submission.");
+        }
+        if (Object.entries(preview).some(([key, value]) => typeof value !== "string" || value.length > (key === "role" ? 120 : 2000))) {
+          return fail(400, "Bad Request", "invalid_body", "role must be a string up to 120 characters; message must be a string up to 2,000 characters.");
+        }
+        return { status: 200, reason: "OK", endpoint, payload: { ...data.hire, preview } };
+      }
+      let payload = data[endpoint];
+      let fields;
+      if (params.has("fields")) {
+        fields = params.get("fields").split(",").map((field) => field.trim());
+        const records = Array.isArray(payload) ? payload : [payload];
+        if (fields.some((field) => !field || !records.some((record) => Object.hasOwn(record, field)))) {
+          return fail(400, "Bad Request", "invalid_fields", "fields must be comma-separated top-level keys present in this endpoint. Missing optional keys are omitted.");
+        }
+      }
+      if (params.has("q")) {
+        const q = params.get("q");
+        if (q.length > 200) return fail(400, "Bad Request", "invalid_query", "q must be 200 characters or fewer.");
+        payload = payload.filter((record) => JSON.stringify(record).toLowerCase().includes(q.toLowerCase()));
+      }
+      if (params.has("limit")) {
+        const limit = params.get("limit");
+        if (!/^[1-9]\d*$/.test(limit) || Number(limit) > 100) return fail(400, "Bad Request", "invalid_limit", "limit must be a whole number from 1 to 100.");
+        payload = payload.slice(0, Number(limit));
+      }
+      if (fields) {
+        const project = (record) => Object.fromEntries(fields.filter((field) => Object.hasOwn(record, field)).map((field) => [field, record[field]]));
+        payload = Array.isArray(payload) ? payload.map(project) : project(payload);
+      }
+      return { status: 200, reason: "OK", endpoint, payload };
     }
 
-    async function call(ep) {
-      const id = ++apiRun;
-      $$(".ep", api).forEach((b) => b.classList.toggle("is-active", b.dataset.ep === ep));
-      reqEl.textContent = paths[ep];
-      stEl.className = "api-status";
-      stEl.textContent = "…";
-      msEl.textContent = "";
-      resEl.innerHTML = '<span class="c">// awaiting response…</span>';
-      const ms = 8 + Math.round(Math.random() * 24);
-      await sleep(reduced ? 0 : 160 + ms * 4);
-      if (id !== apiRun) return;
-      const created = ep === "hire";
-      stEl.textContent = created ? "201 Created" : "200 OK";
-      if (created) stEl.classList.add("created");
-      msEl.textContent = ms + " ms";
-      await renderLines(highlight(JSON.stringify(data[ep], null, 2)), id);
+    function runRequest(method, path, body = bodyEl.value) {
+      path = path.trim();
+      methodEl.value = method;
+      pathEl.value = path;
+      bodyEl.value = body;
+      $("[data-api-body-wrap]", api).hidden = method !== "POST";
+      const started = performance.now();
+      const result = resolveRequest(method, path, body);
+      const requestId = "demo-" + String(++requestCount).padStart(4, "0");
+      if (result.payload.error) result.payload.error.request_id = requestId;
+      views.body = JSON.stringify(result.payload, null, 2);
+      const bytes = new TextEncoder().encode(views.body).length;
+      const elapsed = performance.now() - started;
+      views.headers = [
+        `HTTP/1.1 ${result.status} ${result.reason}`,
+        "Content-Type: application/json; charset=utf-8",
+        `Content-Length: ${bytes}`,
+        "X-Portfolio-Mode: local-simulation",
+        `X-Request-Id: ${requestId}`,
+        ...(Array.isArray(result.payload) ? [`X-Result-Count: ${result.payload.length}`] : []),
+        ...(result.allow ? [`Allow: ${result.allow}`] : []),
+        ...(result.endpoint === "hire" ? ["X-Message-Sent: false"] : []),
+      ].join("\n");
+      views.request = [
+        "# Illustrative request only; these are not live HTTP endpoints.",
+        `${method} ${path}`,
+        "Accept: application/json",
+        ...(method === "POST" ? ["Content-Type: application/json", "", body] : []),
+      ].join("\n");
+      bodyIsJSON = true;
+      view = "body";
+      reqEl.textContent = `${method} ${path}`;
+      stEl.className = "api-status" + (result.status >= 400 ? " err" : "");
+      stEl.textContent = `${result.status} ${result.reason} (mock)`;
+      msEl.textContent = elapsed.toFixed(2) + " ms local";
+      bytesEl.textContent = bytes.toLocaleString() + " B";
+      $$(".ep", api).forEach((button) => {
+        const active = button.dataset.ep === result.endpoint;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      renderView();
+      requestHistory.unshift({ method, path, body, status: result.status });
+      requestHistory.length = Math.min(requestHistory.length, 5);
+      $("[data-api-history]", api).replaceChildren(...requestHistory.map((request) => {
+        const item = document.createElement("li"), button = document.createElement("button"), status = document.createElement("b"), label = document.createElement("span");
+        button.type = "button";
+        button.title = `Replay ${request.method} ${request.path}`;
+        status.textContent = request.status;
+        if (request.status >= 400) status.className = "err";
+        label.textContent = `${request.method} ${request.path}`;
+        button.append(status, label);
+        button.addEventListener("click", () => runRequest(request.method, request.path, request.body));
+        item.appendChild(button);
+        return item;
+      }));
     }
 
-    $$(".ep", api).forEach((b) => b.addEventListener("click", () => call(b.dataset.ep)));
-
-    const aio = new IntersectionObserver((e) => {
-      if (e[0].isIntersecting) { aio.disconnect(); call("profile"); }
-    }, { threshold: 0.3 });
+    function call(endpoint) {
+      const [method, path] = paths[endpoint].split(" ");
+      runRequest(method, path);
+    }
+    composer.addEventListener("submit", (e) => { e.preventDefault(); runRequest(methodEl.value, pathEl.value); });
+    methodEl.addEventListener("change", () => { $("[data-api-body-wrap]", api).hidden = methodEl.value !== "POST"; });
+    composer.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); composer.requestSubmit(); }
+    });
+    $$(".ep", api).forEach((button) => button.addEventListener("click", () => call(button.dataset.ep)));
+    $$("[data-api-example]", api).forEach((button) => button.addEventListener("click", () => runRequest("GET", button.dataset.apiExample)));
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => { view = tab.dataset.apiView; renderView(); });
+      tab.addEventListener("keydown", (e) => {
+        let next;
+        if (e.key === "ArrowRight") next = (index + 1) % tabs.length;
+        if (e.key === "ArrowLeft") next = (index + tabs.length - 1) % tabs.length;
+        if (e.key === "Home") next = 0;
+        if (e.key === "End") next = tabs.length - 1;
+        if (next !== undefined) { e.preventDefault(); tabs[next].focus(); tabs[next].click(); }
+      });
+    });
+    copyEl.addEventListener("click", async () => {
+      copyEl.disabled = true;
+      try { await navigator.clipboard.writeText(views[view]); copyEl.textContent = "Copied"; }
+      catch { copyEl.textContent = "Copy unavailable"; }
+      setTimeout(() => {
+        copyEl.disabled = false;
+        copyEl.textContent = "Copy " + (view === "body" ? bodyIsJSON ? "JSON" : "output" : view === "headers" ? "headers" : "request");
+      }, 1600);
+    });
+    renderView();
+    const aio = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { aio.disconnect(); if (!requestCount) call("profile"); }
+    }, { threshold: 0.15 });
     aio.observe(api);
 
     const shell = $("[data-shell]", api), input = $("input", shell);
     const history = [];
     let hIdx = 0;
-    const text = (s) => `<span class="c">${esc(s)}</span>`;
     const commands = {
-      help: () => text([
-        "available commands:",
-        "  whoami        short bio",
-        "  profile | experience | projects | roadmap | skills | certs   call an endpoint",
-        "  hire          POST /v1/hire",
-        "  resume        open résumé PDF",
-        "  github | linkedin | email",
-        "  clear",
-      ].join("\n")),
-      whoami: () => text("pavan: backend + AI engineer. CS (AI & ML) 2026 grad. Ships RAG pipelines and FastAPI\nservices, measures them, and makes them fast. Available now."),
-      ls: () => text("profile.json  experience.json  projects/  skills.json  certs.json  resume.pdf"),
-      resume: () => { open(RESUME, "_blank", "noopener"); return text("opening resume.pdf …"); },
+      help: () => [
+        "PORTFOLIO SHELL / local simulation",
+        "",
+        "profile | experience | projects | roadmap | skills | certs | hire",
+        "GET /v1/projects?q=pgvector&fields=name,impact,stack",
+        "GET /v1/skills?fields=backend,databases",
+        "GET /v1/certifications?limit=1",
+        'POST /v1/hire {"role":"Backend Engineer"}  (preview only)',
+        "",
+        "q       case-insensitive search across list records",
+        "fields  comma-separated top-level keys; omit absent optional keys",
+        "limit   list results, 1–100; unknown parameters return 400",
+        "",
+        "whoami | ls | resume | github | linkedin | email | clear",
+        "Arrow up/down recalls commands. Response tabs inspect the last request.",
+      ].join("\n"),
+      whoami: () => "pavan: backend + AI engineer. CS (AI & ML) 2026 grad. Ships evidence-led AI tooling\nand RAG pipelines, measures them, and makes them fast. Available now.",
+      ls: () => "profile.json  experience.json  projects/  roadmap.json  skills.json  certs.json  resume.pdf",
+      resume: () => { open(RESUME, "_blank", "noopener"); return "opening resume.pdf …"; },
       "cat resume.pdf": () => commands.resume(),
-      github: () => { open("https://github.com/PavanBollepalli", "_blank", "noopener"); return text("→ github.com/PavanBollepalli"); },
-      linkedin: () => { open("https://linkedin.com/in/PavanBollepalli", "_blank", "noopener"); return text("→ linkedin.com/in/PavanBollepalli"); },
-      email: () => { location.href = "mailto:" + EMAIL; return text("→ " + EMAIL); },
+      github: () => { open("https://github.com/PavanBollepalli", "_blank", "noopener"); return "→ github.com/PavanBollepalli"; },
+      linkedin: () => { open("https://linkedin.com/in/PavanBollepalli", "_blank", "noopener"); return "→ linkedin.com/in/PavanBollepalli"; },
+      email: () => { location.href = "mailto:" + EMAIL; return "→ " + EMAIL; },
       contact: () => commands.email(),
       "sudo hire pavan": () => { call("hire"); return null; },
-      "sudo rm -rf /": () => text("nice try. permission denied: this portfolio is idempotent."),
+      "sudo rm -rf /": () => "nice try. permission denied: this portfolio is idempotent.",
       clear: () => "",
     };
-    ["profile", "experience", "projects", "roadmap", "skills", "certs", "hire"].forEach((k) => (commands[k] = () => { call(k); return null; }));
+    Object.keys(paths).forEach((key) => (commands[key] = () => { call(key); return null; }));
     commands.certifications = commands.certs;
-
     shell.addEventListener("submit", (e) => {
       e.preventDefault();
       const raw = input.value.trim();
       if (!raw) return;
       history.push(raw); hIdx = history.length;
       input.value = "";
-      let cmd = raw.toLowerCase().replace(/\s+/g, " ");
-      const m = cmd.match(/^(get|post)\s+\/?(?:v1\/)?([a-z]+)/);
-      if (m) cmd = m[2] === "certifications" ? "certs" : m[2];
-      const fn = commands[cmd];
-      if (fn) {
-        const out = fn();
-        if (out !== null) {
-          apiRun++;
-          reqEl.textContent = "$ " + raw;
-          stEl.className = "api-status"; stEl.textContent = "exit 0"; msEl.textContent = "";
-          resEl.innerHTML = out;
-        }
-      } else {
-        apiRun++;
-        reqEl.textContent = "$ " + raw;
-        stEl.className = "api-status err"; stEl.textContent = "404";
-        msEl.textContent = "";
-        resEl.innerHTML = text(`command not found: ${raw}\ntype "help" for a list of commands`);
-      }
+      const request = raw.match(/^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+(\S+)(?:\s+([\s\S]+))?$/i);
+      if (request) { runRequest(request[1].toUpperCase(), request[2], request[3] || bodyEl.value); return; }
+      const cmd = raw.toLowerCase().replace(/\s+/g, " ");
+      const fn = Object.hasOwn(commands, cmd) ? commands[cmd] : null;
+      const out = fn ? fn() : `command not found: ${raw}\ntype "help" for a list of commands`;
+      if (out === null) return;
+      reqEl.textContent = "$ " + raw;
+      stEl.className = "api-status" + (fn ? "" : " err");
+      stEl.textContent = fn ? "exit 0" : "command not found";
+      msEl.textContent = ""; bytesEl.textContent = "";
+      views.body = out;
+      views.headers = "Shell output has no HTTP response headers.";
+      views.request = "Shell command: " + raw;
+      bodyIsJSON = false; view = "body";
+      renderView();
     });
     input.addEventListener("keydown", (e) => {
       if (e.key === "ArrowUp" && hIdx > 0) { hIdx--; input.value = history[hIdx]; e.preventDefault(); }
@@ -448,7 +675,7 @@
   const globe = $("#globe");
   if (globe) {
     const hot = new Set(["FastAPI", "pgvector", "RAG", "Python", "PostgreSQL", "LLMs"]);
-    const tags = ["FastAPI", "Python", "pgvector", "RAG", "PostgreSQL", "LLMs", "Node.js", "Express", "REST", "Java", "SQL", "JavaScript", "MySQL", "HNSW", "Embeddings", "Llama 3.3", "Mistral", "Groq", "Gemini", "Tavily", "ChromaDB", "tree-sitter", "Docker", "Linux", "AWS", "GCP", "Git", "CI/CD", "Next.js", "React", "Tailwind", "Typst", "Streamlit", "Prompting"];
+    const tags = ["FastAPI", "Python", "pgvector", "RAG", "PostgreSQL", "LLMs", "Node.js", "Express", "REST", "Java", "SQL", "JavaScript", "MySQL", "HNSW", "Embeddings", "Llama 3.3", "Mistral", "Groq", "Gemini", "Tavily", "ChromaDB", "pypdf", "Docker", "Linux", "AWS", "GCP", "Git", "CI/CD", "Next.js", "React", "Tailwind", "Typst", "Streamlit", "Prompting"];
     const els = tags.map((t) => {
       const s = document.createElement("span");
       s.textContent = t;
@@ -461,19 +688,26 @@
       const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * Math.PI * (3 - Math.sqrt(5));
       return [Math.cos(th) * r, y, Math.sin(th) * r];
     });
-    let ax = 0.25, ay = 0, vx = 0, vy = reduced ? 0 : 0.004, dragging = false, lx = 0, ly = 0, visible = false;
+    let ax = 0.25, ay = 0, vx = 0, vy = reduced ? 0 : 0.004, dragging = false, lx = 0, ly = 0, visible = false, globeRaf = 0;
     globe.addEventListener("pointerdown", (e) => { dragging = true; lx = e.clientX; ly = e.clientY; globe.setPointerCapture(e.pointerId); });
     globe.addEventListener("pointermove", (e) => {
       if (!dragging) return;
       vy = (e.clientX - lx) * 0.0045; vx = (e.clientY - ly) * -0.0045;
       lx = e.clientX; ly = e.clientY;
+      if (reduced) frame();
     });
-    const end = () => { dragging = false; };
+    const end = () => { dragging = false; if (reduced) vx = vy = 0; };
     globe.addEventListener("pointerup", end);
     globe.addEventListener("pointercancel", end);
-    new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) frame(); }).observe(globe);
+    new IntersectionObserver((e) => {
+      visible = e[0].isIntersecting;
+      if (visible && !globeRaf) frame();
+      if (!visible) { cancelAnimationFrame(globeRaf); globeRaf = 0; }
+    }).observe(globe);
+    addEventListener("resize", () => { if (reduced && visible) frame(); });
 
     function frame() {
+      globeRaf = 0;
       if (!visible) return;
       if (!dragging) {
         vy += ((reduced ? 0 : 0.0035) - vy) * 0.02;
@@ -493,18 +727,24 @@
         el.style.opacity = (0.25 + (z2 + 1) * 0.375).toFixed(3);
         el.style.zIndex = String(Math.round((z2 + 1) * 100));
       }
-      requestAnimationFrame(frame);
+      if (!reduced) globeRaf = requestAnimationFrame(frame);
     }
   }
 
   /* ---------- Copy + back to top ---------- */
-  $$("[data-copy]").forEach((b) => b.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(b.dataset.copy);
-      const o = b.textContent;
-      b.textContent = "Copied ✓";
-      setTimeout(() => (b.textContent = o), 1600);
-    } catch { location.href = "mailto:" + b.dataset.copy; }
-  }));
+  $$("[data-copy]").forEach((b) => {
+    const original = b.textContent;
+    b.setAttribute("aria-live", "polite");
+    b.addEventListener("click", async () => {
+      b.disabled = true;
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy);
+        b.textContent = "Copied";
+      } catch {
+        b.textContent = "Copy unavailable";
+      }
+      setTimeout(() => { b.textContent = original; b.disabled = false; }, 1600);
+    });
+  });
   $$("[data-top]").forEach((b) => b.addEventListener("click", () => scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" })));
 })();

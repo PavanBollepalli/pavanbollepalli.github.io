@@ -19,12 +19,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css?v=20261016-rag" />
 <script type="importmap">
 { "imports": {
-  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
 } }
 </script>
 <script type="application/ld+json">
@@ -104,11 +102,11 @@
         <span class="line">Pavan</span>
         <span class="line outline">Bollepalli</span>
       </h1>
-      <p class="hero-role reveal">I build <span class="type-wrap"><span id="typer">RAG pipelines</span><span class="caret"></span></span><br />with warm queries in <strong class="accent">480&nbsp;ms</strong>, not 9.6&nbsp;s.</p>
-      <p class="hero-sub reveal">Backend and AI engineer. I design FastAPI services, vector search and LLM pipelines, then measure them until they're fast. 2026 CS graduate, 14 months shipping code into Wikimedia Foundation's codebase, AWS and Google Cloud certified.</p>
+      <p class="hero-role reveal">I build <span class="type-wrap"><span id="typer">RAG pipelines</span><span class="caret"></span></span><br />with <strong class="accent">evidence, not guesswork.</strong></p>
+      <p class="hero-sub reveal">Creator of Flash Resume: AI tailoring with a deterministic evidence gate and verified PDF output. Builder of SkillVector: 95% lower warm-query RAG latency. 2026 CSE (AI &amp; ML) graduate, Wikimedia open-source contributor, AWS and Google Cloud certified.</p>
       <div class="hero-cta reveal">
         <a class="btn btn-primary magnetic" href="#contact">Hire me <span aria-hidden="true">↗</span></a>
-        <a class="btn btn-ghost magnetic" href="#work">See the systems</a>
+        <a class="btn btn-ghost magnetic" href="#flashresume">Explore Flash Resume</a>
         <a class="btn btn-link" href="assets/Pavan-Bollepalli-Resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
       </div>
       <div class="hero-fit reveal" aria-label="Target roles and availability">
@@ -119,9 +117,9 @@
       </div>
     </div>
 
-    <aside class="hero-hud reveal" aria-label="Live metrics">
+    <aside class="hero-hud reveal" aria-label="SkillVector reported benchmark, not live telemetry">
       <div class="hud-card">
-        <div class="hud-head"><span>skillvector.rag</span><span class="hud-live"><i></i>prod</span></div>
+        <div class="hud-head"><span>skillvector.rag</span><span class="hud-live">benchmark</span></div>
         <div class="hud-metric">
           <small>warm query latency</small>
           <strong><span data-count="0.48" data-decimals="2">0.48</span><em>s</em></strong>
@@ -145,8 +143,8 @@
 <!-- ================= MARQUEE ================= -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
-    <span>FastAPI</span><span>PostgreSQL</span><span>pgvector</span><span>HNSW</span><span>RAG</span><span>Llama 3.3 70B</span><span>Mistral Embed</span><span>Groq</span><span>Node.js</span><span>Docker</span><span>AWS</span><span>GCP</span><span>Next.js</span><span>tree-sitter</span><span>GitHub Actions</span>
-    <span>FastAPI</span><span>PostgreSQL</span><span>pgvector</span><span>HNSW</span><span>RAG</span><span>Llama 3.3 70B</span><span>Mistral Embed</span><span>Groq</span><span>Node.js</span><span>Docker</span><span>AWS</span><span>GCP</span><span>Next.js</span><span>tree-sitter</span><span>GitHub Actions</span>
+    <span>FastAPI</span><span>PostgreSQL</span><span>pgvector</span><span>HNSW</span><span>RAG</span><span>Llama 3.3 70B</span><span>Mistral Embed</span><span>Groq</span><span>Node.js</span><span>Docker</span><span>AWS</span><span>GCP</span><span>Next.js</span><span>Typst</span><span>GitHub Actions</span>
+    <span>FastAPI</span><span>PostgreSQL</span><span>pgvector</span><span>HNSW</span><span>RAG</span><span>Llama 3.3 70B</span><span>Mistral Embed</span><span>Groq</span><span>Node.js</span><span>Docker</span><span>AWS</span><span>GCP</span><span>Next.js</span><span>Typst</span><span>GitHub Actions</span>
   </div>
 </div>
 
@@ -164,7 +162,7 @@
       <p class="kicker reveal">01 / About</p>
       <h2 class="h2 reveal">Backend first. <span class="grad">AI native.</span></h2>
       <p class="lead reveal">I'm a Computer Science graduate (B.Tech CSE, AI &amp; ML, VVIT, 2026) who likes the unglamorous half of AI products: the retrieval layer, the database indexes, the locks, the caches, and the CI pipelines that keep it all from falling over.</p>
-      <p class="reveal">My projects are judged by numbers. SkillVector's RAG pipeline went from <strong>9.6 s to 0.48 s</strong> on warm queries. Flash Resume cut LLM output by <strong>~80%</strong> by returning diffs instead of documents. At Wikimedia I cut SQL query time by <strong>~25%</strong> on replicated production data. I care about systems that are correct, observable and fast, in that order.</p>
+      <p class="reveal">Flash Resume separates <strong>AI proposals from deterministic evidence checks</strong>, then compiles and verifies the PDF. SkillVector's RAG pipeline went from <strong>9.6 s to 0.48 s</strong> on warm queries. At Wikimedia I cut SQL query time by <strong>~25%</strong> on replicated production data. I care about systems that are correct, reviewable and fast, in that order.</p>
       <div class="about-cards">
         <div class="mini-card reveal"><span class="mini-ico">⌘</span><strong>Backend</strong><p>FastAPI, Node.js, Express, REST design, PostgreSQL, MySQL</p></div>
         <div class="mini-card reveal"><span class="mini-ico">◈</span><strong>AI engineering</strong><p>RAG, hybrid vector search, embeddings, prompt design, LLM guardrails</p></div>
@@ -240,11 +238,128 @@
       <p class="lead reveal">Each one is deployed or published, has a repo, and has a number I can explain in an interview.</p>
     </div>
 
+    <article class="project project-xl flash-project glass reveal" id="flashresume">
+      <div class="project-top">
+        <div>
+          <span class="project-idx">P-01 · Flagship / Evidence-led AI tooling</span>
+          <h3><svg class="flash-mark" viewBox="0 0 32 40" aria-hidden="true"><path d="M19 2 3 23h11l-1 15 16-23H18Z" /></svg>Flash Resume</h3>
+        </div>
+        <div class="project-links">
+          <a class="btn btn-sm btn-primary" href="https://pypi.org/project/flash-resume/" target="_blank" rel="noopener">Install from PyPI ↗</a>
+          <a class="btn btn-sm btn-ghost" href="https://github.com/PavanBollepalli/flash-resume" target="_blank" rel="noopener">Source &amp; README ↗</a>
+        </div>
+      </div>
+      <div class="flash-intro">
+        <div>
+          <span class="flash-label">Published Python package · CLI + Manifest V3 extension</span>
+          <p class="flash-headline">AI proposes.<br /><span class="grad">Evidence decides.</span></p>
+          <p class="project-pitch">I built a local-first résumé engine that turns a selected job description into a tailored PDF and a reviewable evidence report. Not another full-document rewrite: a controlled pipeline from real experience to verified output.</p>
+        </div>
+        <div class="flash-problem">
+          <span class="viz-label">The problem / the product decision</span>
+          <p>Job board → AI chat → document editor. Every copy-paste risks unsupported claims and broken layout.</p>
+          <strong>One workflow. Two artifacts. A clear evidence boundary.</strong>
+          <span>Browser or terminal → local engine → PDF + diff report</span>
+        </div>
+      </div>
+      <div class="project-grid3 flash-proof">
+        <div class="metric"><strong>2 parallel plans</strong><span>Separate core and project specialists, merged and validated locally</span></div>
+        <div class="metric"><strong>1-page verification</strong><span>Typst compilation followed by a pypdf page-count check</span></div>
+        <div class="metric"><strong>44 tests</strong><span>Passing tests reported in the supplied project README</span></div>
+      </div>
+
+      <div class="flash-lab" data-flash-demo>
+        <header class="flash-lab-head">
+          <div><span class="flash-label">Interactive architecture illustration</span><h4>Would this claim make the cut?</h4></div>
+          <span class="demo-badge">Fixed samples · no AI calls</span>
+        </header>
+        <div class="flash-demo-controls">
+          <div class="flash-select"><label for="flashScenario">Example job requirement</label><select id="flashScenario" data-flash-scenario><option value="backend">Backend role</option><option value="compound">Compound ML requirement</option><option value="adjacent">Adjacent framework</option></select></div>
+          <div class="seg" role="group" aria-label="Illustrated tailoring mode">
+            <button type="button" class="seg-btn is-active" data-flash-mode="truthful" aria-pressed="true">Truthful</button>
+            <button type="button" class="seg-btn" data-flash-mode="interview" aria-pressed="false">Interview prep</button>
+          </div>
+        </div>
+        <div class="flash-demo-grid">
+          <div class="flash-source">
+            <span class="viz-label">Sample master résumé evidence</span>
+            <ul data-flash-evidence><li>Built Python services with FastAPI</li><li>Queried PostgreSQL through REST APIs</li><li>No Kubernetes experience documented</li></ul>
+            <span class="flash-boundary">The model's suggestion is not the source of truth.</span>
+          </div>
+          <div class="flash-assessment">
+            <div class="flash-gate-title"><span class="viz-label">Evidence gate / illustrated decisions</span><span data-flash-mode-label>Truthful mode</span></div>
+            <div class="flash-decisions" data-flash-decisions>
+              <div class="flash-decision"><strong>FastAPI</strong><span class="evidence-status covered">Covered</span><small>Explicit framework evidence → eligible for tailoring.</small></div>
+              <div class="flash-decision"><strong>PostgreSQL</strong><span class="evidence-status covered">Covered</span><small>Documented database use → eligible for tailoring.</small></div>
+              <div class="flash-decision"><strong>Kubernetes</strong><span class="evidence-status unsupported">Unsupported</span><small>No source evidence → excluded from normal claims.</small></div>
+            </div>
+          </div>
+        </div>
+        <p class="flash-demo-note" data-flash-note role="status">Supported wording may change. Unsupported experience does not become a qualification.</p>
+        <p class="flash-caption">Illustrates the documented rules, not the actual Flash Resume matcher. Interview familiarity stays separately labeled; it is never production experience.</p>
+      </div>
+
+      <div class="flash-architecture">
+        <div class="flash-subhead"><span class="flash-label">Under the hood</span><h4>A language model inside a system, not in charge of it.</h4></div>
+        <ol class="flash-flow">
+          <li><span>01 / Input</span><strong>Selected JD</strong><small>Browser selection, clipboard, file or stdin</small></li>
+          <li><span>02 / Plan</span><strong>Parallel specialists</strong><small>Core + project schemas via Gemini or Groq</small></li>
+          <li class="flash-flow-gate"><span>03 / Boundary</span><strong>Merge &amp; validate</strong><small>IDs, evidence, lengths, metrics and mode rules</small></li>
+          <li><span>04 / Compile</span><strong>Typst + pypdf</strong><small>Density fallback and page-count verification</small></li>
+          <li><span>05 / Review</span><strong>PDF + report</strong><small>Changes, evidence coverage and output diagnostics</small></li>
+        </ol>
+      </div>
+
+      <div class="flash-detail-grid">
+        <section class="flash-detail">
+          <span class="flash-label">Engineering decisions</span>
+          <h4>Reliability is part of the workflow.</h4>
+          <ul class="bullets">
+            <li><strong>Structured plans:</strong> focused core and project calls run concurrently. The merger validates edits; a full-plan fallback handles specialist-call failure.</li>
+            <li><strong>Beyond keyword matching:</strong> alternatives, compound requirements, education equivalence and partial evidence receive distinct treatment.</li>
+            <li><strong>Layout recovery:</strong> standard → compact → tight density, followed by targeted trimming that protects the strongest content.</li>
+            <li><strong>Thin clients:</strong> the extension collects selected text and mode. The local FastAPI engine owns configuration, keys and generated files.</li>
+          </ul>
+        </section>
+        <section class="flash-detail flash-terminal">
+          <div class="flash-terminal-head"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Windows · Python 3.12+</span></div>
+          <h4>From install to an application.</h4>
+          <div class="flash-command"><code>py -m pip install flash-resume</code><button type="button" class="btn btn-sm btn-ghost" data-copy="py -m pip install flash-resume" aria-label="Copy Flash Resume install command">Copy</button></div>
+          <pre><span class="d-ctx"># configure provider, master résumé &amp; output</span>
+fs setup
+
+<span class="d-ctx"># locate the bundled browser extension</span>
+fs extension-path
+
+<span class="d-ctx"># tailor from a file, or use the clipboard</span>
+fs tailor --jd .\jobs\backend-role.txt
+
+<span class="d-ctx"># check local configuration and tools</span>
+fs doctor</pre>
+          <p>Load the unpacked extension once. Select JD text in Chrome, Brave or Edge, then use the page button. Review the generated PDF and report before applying.</p>
+        </section>
+      </div>
+
+      <div class="flash-output-grid">
+        <div class="flash-artifacts"><span class="flash-label">Reviewable by design</span><h4>The output has an audit trail.</h4><div><code>Company_Role.pdf</code><span>Compiled résumé, page-checked before saving</span></div><div><code>Company_Role.diff.md</code><span>Before/after edits, evidence assignments, covered / partial / unsupported requirements, page count and compilation timings</span></div></div>
+        <div class="flash-caveats"><span class="flash-label">Boundaries, not marketing promises</span><h4>What I won't overclaim.</h4><p>The coverage score measures supported extracted requirements, not acceptance by an external ATS. Imported résumés need review. The configured AI provider processes the submitted JD; local-first does not mean offline. Windows is required for background autostart.</p></div>
+      </div>
+      <details class="deep flash-benchmarks">
+        <summary>Earlier benchmark context &amp; release workflow <span>+</span></summary>
+        <ul class="bullets">
+          <li><strong>Earlier résumé-reported measurements:</strong> ~3 minutes → under 10 seconds per tailoring run, ~3,000 → ~600 LLM output tokens and local Typst compilation under 100 ms. These describe an earlier measured workflow, not guarantees for the current parallel pipeline, every provider or every résumé.</li>
+          <li><strong>Current README:</strong> documents 44 passing tests, separate core/project plans, overflow recovery and diff reports. Its sample completion timing is illustrative, not a universal benchmark.</li>
+          <li><strong>Distribution:</strong> pip-installable CLI with a bundled dependency-free MV3 extension. GitHub Actions and tag-triggered PyPI releases are documented in my résumé; code and release history are linked above.</li>
+        </ul>
+      </details>
+      <footer class="tags"><span>Python 3.12+</span><span>FastAPI</span><span>Structured schemas</span><span>Evidence matching</span><span>Typst</span><span>pypdf</span><span>Chrome MV3</span><span>Gemini / Groq</span><span>PyPI</span><span>GitHub Actions</span></footer>
+    </article>
+
     <!-- SkillVector -->
     <article class="project project-xl glass reveal" id="skillvector">
       <div class="project-top">
         <div>
-          <span class="project-idx">P-01 · AI career intelligence</span>
+          <span class="project-idx">P-02 · AI career intelligence</span>
           <h3>SkillVector</h3>
           <p class="project-pitch">Skill-gap analysis grounded in real labour-market data. A 3-layer RAG pipeline over O*NET 29.0 (900+ occupations) with hybrid vector search and live web retrieval.</p>
         </div>
@@ -256,11 +371,11 @@
 
       <div class="rag" data-rag>
         <div class="rag-controls">
-          <span class="viz-label">Interactive: trace a query through the pipeline</span>
-          <div class="seg">
-            <button type="button" class="seg-btn is-active" data-mode="warm">Warm query</button>
-            <button type="button" class="seg-btn" data-mode="cold">Cold query</button>
-            <button type="button" class="seg-btn" data-mode="dupe">3× duplicate clicks</button>
+          <span class="viz-label">Educational simulation · not a live request trace</span>
+          <div class="seg" role="group" aria-label="Simulated RAG query mode">
+            <button type="button" class="seg-btn is-active" data-mode="warm" aria-pressed="true">Warm query</button>
+            <button type="button" class="seg-btn" data-mode="cold" aria-pressed="false">Cold query</button>
+            <button type="button" class="seg-btn" data-mode="dupe" aria-pressed="false">3× duplicate clicks</button>
           </div>
         </div>
         <div class="rag-flow">
@@ -300,73 +415,6 @@
       <footer class="tags"><span>Next.js 16</span><span>FastAPI</span><span>PostgreSQL</span><span>pgvector</span><span>Mistral Embed</span><span>Llama 3.3 70B</span><span>Groq</span><span>Tavily</span><span>O*NET 29.0</span></footer>
     </article>
 
-    <div class="project-row">
-      <!-- Flash Resume -->
-      <article class="project glass tilt reveal" id="flashresume">
-        <div class="project-top">
-          <div>
-            <span class="project-idx">P-02 · Local-first AI tooling</span>
-            <h3>Flash Resume</h3>
-          </div>
-          <div class="project-links">
-            <a class="btn btn-sm btn-ghost" href="https://pypi.org/project/flash-resume/" target="_blank" rel="noopener">PyPI ↗</a>
-            <a class="btn btn-sm btn-ghost" href="https://github.com/PavanBollepalli/flash-resume" target="_blank" rel="noopener">GitHub ↗</a>
-          </div>
-        </div>
-        <p class="project-pitch">A pip-installable CLI and Chrome extension that tailors a résumé to a job description in under 10 seconds. The LLM returns a targeted diff, not a whole document.</p>
-        <div class="diff" aria-label="Example of the targeted diff output">
-          <div class="diff-head"><span>resume.typ</span><span>evidence gate: <b class="ok">pass</b></span></div>
-          <pre><span class="d-ctx">  Built a 3-layer RAG retrieval pipeline</span>
-<span class="d-del">- that improved performance</span>
-<span class="d-add">+ that reduced latency 9.6s → 0.48s</span>
-<span class="d-ctx">  Stack: FastAPI, PostgreSQL + pgvector</span>
-<span class="d-rej">✕ "Kubernetes" dropped: not in master résumé</span></pre>
-        </div>
-        <div class="token-viz">
-          <div class="bar-row"><span>full résumé</span><div class="bar"><i style="--w:100%"></i></div><b>~3,000 tok</b></div>
-          <div class="bar-row"><span>diff output</span><div class="bar good"><i style="--w:20%"></i></div><b>~600 tok</b></div>
-        </div>
-        <div class="project-grid3 compact">
-          <div class="metric"><strong>3 min → &lt;10s</strong><span>per application</span></div>
-          <div class="metric"><strong>&lt;100 ms</strong><span>local Typst compile</span></div>
-          <div class="metric"><strong>±2 words</strong><span>rewrite cap, no invented experience</span></div>
-        </div>
-        <footer class="tags"><span>Python</span><span>FastAPI</span><span>Typst</span><span>Chrome MV3</span><span>GitHub Actions → PyPI</span><span>Groq / Gemini</span></footer>
-      </article>
-
-      <!-- CodeAtlas -->
-      <article class="project glass tilt reveal" id="codeatlas">
-        <div class="project-top">
-          <div>
-            <span class="project-idx">P-03 · Code intelligence</span>
-            <h3>CodeAtlas</h3>
-          </div>
-          <div class="project-links">
-            <a class="btn btn-sm btn-ghost" href="https://github.com/PavanBollepalli/CodeAtlas" target="_blank" rel="noopener">GitHub ↗</a>
-          </div>
-        </div>
-        <p class="project-pitch">Chat with any repository. End-to-end RAG over source code, with AST-aware chunking so answers are grounded in whole functions and classes, not arbitrary line windows.</p>
-        <div class="ast" aria-label="AST chunking illustration">
-          <div class="ast-col">
-            <span class="viz-label">naive chunking</span>
-            <div class="chunk bad">def ingest(repo):<br />&nbsp;&nbsp;files = walk(</div>
-            <div class="chunk bad">repo)<br />&nbsp;&nbsp;for f in fil</div>
-          </div>
-          <div class="ast-arrow">→</div>
-          <div class="ast-col">
-            <span class="viz-label">tree-sitter AST</span>
-            <div class="chunk good"><b>fn</b> ingest(repo)</div>
-            <div class="chunk good"><b>class</b> Indexer</div>
-            <div class="chunk good"><b>fn</b> embed(chunk)</div>
-          </div>
-        </div>
-        <div class="endpoint-list">
-          <div><span class="m post">POST</span><code>/analyze</code><small>clone, parse, chunk, embed into ChromaDB</small></div>
-          <div><span class="m post">POST</span><code>/chat</code><small>retrieve and stream a grounded LLM answer</small></div>
-        </div>
-        <footer class="tags"><span>FastAPI</span><span>Python</span><span>tree-sitter</span><span>ChromaDB</span><span>Mistral Embeddings</span><span>Next.js</span></footer>
-      </article>
-    </div>
 
     <a class="arrow-link reveal" href="https://github.com/PavanBollepalli" target="_blank" rel="noopener">More on GitHub <span>→</span></a>
   </div>
@@ -381,8 +429,8 @@
         <h2 class="h2 reveal">What I want to <span class="grad">build next.</span></h2>
       </div>
       <div class="next-intro reveal">
-        <span class="truth-label"><i></i>Planned concepts — not shipped claims</span>
-        <p class="lead">Three backend-heavy AI ideas aimed at the reliability gaps I keep finding in production systems.</p>
+        <span class="truth-label"><i></i>Proposed concepts — not active or shipped</span>
+        <p class="lead">Proposed directions, not active projects: evaluation, agent reliability and multimodal retrieval. Scope will follow a real user problem.</p>
       </div>
     </div>
 
@@ -390,7 +438,7 @@
       <article class="next-card glass tilt reveal next-card-featured">
         <header class="next-card-head">
           <span class="next-index">NEXT / 01</span>
-          <span class="next-state state-next"><i></i>Highest priority</span>
+          <span class="next-state state-next"><i></i>Proposed</span>
         </header>
         <div class="next-icon" aria-hidden="true">
           <svg viewBox="0 0 64 64"><path d="M8 45h9l7-18 9 27 8-38 7 29h8"/><circle cx="17" cy="45" r="3"/><circle cx="24" cy="27" r="3"/><circle cx="33" cy="54" r="3"/><circle cx="41" cy="16" r="3"/><circle cx="48" cy="45" r="3"/></svg>
@@ -409,7 +457,7 @@
       <article class="next-card glass tilt reveal">
         <header class="next-card-head">
           <span class="next-index">QUEUE / 02</span>
-          <span class="next-state state-research">Architecture</span>
+          <span class="next-state state-research">Proposed</span>
         </header>
         <div class="next-icon" aria-hidden="true">
           <svg viewBox="0 0 64 64"><path d="M32 7 52 18v15c0 12-8 20-20 24C20 53 12 45 12 33V18Z"/><path d="m22 32 7 7 14-16"/></svg>
@@ -428,7 +476,7 @@
       <article class="next-card glass tilt reveal">
         <header class="next-card-head">
           <span class="next-index">QUEUE / 03</span>
-          <span class="next-state state-concept">Research</span>
+          <span class="next-state state-concept">Proposed</span>
         </header>
         <div class="next-icon" aria-hidden="true">
           <svg viewBox="0 0 64 64"><rect x="8" y="10" width="22" height="18" rx="3"/><rect x="34" y="36" width="22" height="18" rx="3"/><path d="M38 12h10a6 6 0 0 1 6 6v8M26 52H16a6 6 0 0 1-6-6v-8M24 36l16-8"/></svg>
@@ -476,31 +524,55 @@
         <p class="kicker reveal">06 / Developer API</p>
         <h2 class="h2 reveal">Query me <span class="grad">like a backend.</span></h2>
       </div>
-      <p class="lead reveal">A mock REST API of my profile. Pick an endpoint, or type <code>help</code> in the shell.</p>
+      <p class="lead reveal">A tiny API workbench for my engineering story. Filter the evidence, shape the JSON, inspect a request, or drive it from the terminal. Everything runs locally in your browser.</p>
     </div>
 
     <div class="api glass reveal" data-api>
       <div class="api-side">
-        <div class="api-base"><span>base</span><code>https://api.pavanbollepalli.me/v1</code></div>
-        <button type="button" class="ep is-active" data-ep="profile"><span class="m get">GET</span>/profile</button>
-        <button type="button" class="ep" data-ep="experience"><span class="m get">GET</span>/experience</button>
-        <button type="button" class="ep" data-ep="projects"><span class="m get">GET</span>/projects?sort=impact</button>
-        <button type="button" class="ep" data-ep="roadmap"><span class="m get">GET</span>/roadmap</button>
-        <button type="button" class="ep" data-ep="skills"><span class="m get">GET</span>/skills</button>
-        <button type="button" class="ep" data-ep="certs"><span class="m get">GET</span>/certifications</button>
-        <button type="button" class="ep" data-ep="hire"><span class="m post">POST</span>/hire</button>
+        <div class="api-base"><span class="api-local"><i></i>Local simulation</span><code>No network calls. No messages sent.</code></div>
+        <span class="api-side-label">Endpoint collection / v1</span>
+        <button type="button" class="ep is-active" data-ep="profile" aria-pressed="true"><span class="m get">GET</span>/profile</button>
+        <button type="button" class="ep" data-ep="experience" aria-pressed="false"><span class="m get">GET</span>/experience</button>
+        <button type="button" class="ep" data-ep="projects" aria-pressed="false"><span class="m get">GET</span>/projects</button>
+        <button type="button" class="ep" data-ep="roadmap" aria-pressed="false"><span class="m get">GET</span>/roadmap</button>
+        <button type="button" class="ep" data-ep="skills" aria-pressed="false"><span class="m get">GET</span>/skills</button>
+        <button type="button" class="ep" data-ep="certs" aria-pressed="false"><span class="m get">GET</span>/certifications</button>
+        <button type="button" class="ep" data-ep="hire" aria-pressed="false"><span class="m post">POST</span>/hire</button>
+        <div class="api-history"><span class="api-side-label">Recent requests / click to replay</span><ol data-api-history></ol><small>Session only · nothing saved</small></div>
       </div>
       <div class="api-main">
-        <div class="api-bar">
-          <span class="dots"><i></i><i></i><i></i></span>
+        <div class="api-workbench-head"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>portfolio / request workbench</span><span class="api-version">LOCAL · v1</span></div>
+        <form class="api-composer" data-api-composer autocomplete="off">
+          <div class="api-request-row">
+            <label class="sr-only" for="apiMethod">Request method</label>
+            <select id="apiMethod" data-api-method><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option></select>
+            <label class="sr-only" for="apiPath">Request path</label>
+            <input id="apiPath" data-api-path value="/v1/profile" spellcheck="false" maxlength="2048" aria-describedby="apiQueryHelp" required />
+            <button class="btn btn-sm btn-primary" type="submit">Run locally <span aria-hidden="true">↗</span></button>
+          </div>
+          <div class="api-body" data-api-body-wrap hidden><label for="apiBody">JSON body / preview only, never sent</label><textarea id="apiBody" data-api-body rows="3" spellcheck="false" maxlength="4096">{"role": "Backend Engineer"}</textarea></div>
+          <div class="api-query-help" id="apiQueryHelp"><span><code>q</code> filters lists · <code>fields</code> selects keys · <code>limit</code> caps results</span><span><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> to run</span></div>
+        </form>
+        <div class="api-recipes" role="group" aria-label="Example API requests"><span>Try a query</span><button type="button" data-api-example="/v1/projects?q=pgvector&amp;fields=name,impact,stack">RAG evidence ↗</button><button type="button" data-api-example="/v1/skills?fields=backend,databases">Backend stack ↗</button><button type="button" data-api-example="/v1/projects?fields=name,architecture,outputs&amp;limit=1">Flash Resume internals ↗</button></div>
+        <div class="api-bar" role="status" aria-live="polite" aria-atomic="true">
           <code class="api-req" data-api-req>GET /v1/profile</code>
-          <span class="api-status" data-api-status>200 OK</span>
-          <span class="api-ms" data-api-ms>12 ms</span>
+          <span class="api-status" data-api-status>Ready</span>
+          <span class="api-ms" data-api-ms></span>
+          <span class="api-bytes" data-api-bytes></span>
         </div>
-        <pre class="api-res" data-api-res tabindex="0"></pre>
+        <div class="api-response-tools">
+          <div class="api-tabs" role="tablist" aria-label="Response inspector">
+            <button type="button" id="apiTabBody" role="tab" data-api-view="body" aria-selected="true" aria-controls="apiResponse">JSON</button>
+            <button type="button" id="apiTabHeaders" role="tab" data-api-view="headers" aria-selected="false" aria-controls="apiResponse" tabindex="-1">Headers</button>
+            <button type="button" id="apiTabRequest" role="tab" data-api-view="request" aria-selected="false" aria-controls="apiResponse" tabindex="-1">HTTP request</button>
+          </div>
+          <button type="button" class="api-copy" data-api-copy aria-live="polite">Copy JSON</button>
+        </div>
+        <pre class="api-res" id="apiResponse" data-api-res role="tabpanel" aria-labelledby="apiTabBody" tabindex="0"></pre>
+        <div class="api-response-note">Simulated HTTP contract · timing measures local resolution, not network latency.</div>
         <form class="shell" data-shell autocomplete="off">
           <label for="shellInput">pavan@api:~$</label>
-          <input id="shellInput" type="text" spellcheck="false" placeholder="try: help, whoami, projects, hire" aria-label="Shell command" />
+          <input id="shellInput" type="text" spellcheck="false" maxlength="2048" placeholder="help or GET /v1/projects?q=fastapi" aria-label="Shell command" />
         </form>
       </div>
     </div>

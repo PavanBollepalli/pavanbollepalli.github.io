@@ -27,10 +27,10 @@ function init() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lowPower, powerPreference: "high-performance" });
   renderer.setPixelRatio(Math.min(devicePixelRatio, small() ? 1.5 : 1.75));
   renderer.setSize(innerWidth, innerHeight);
-  renderer.setClearColor(0x05060a, 1);
+  renderer.setClearColor(0x030409, 1);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x05060a, 0.045);
+  scene.fog = new THREE.FogExp2(0x030409, 0.045);
   const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
   camera.position.set(0, 0, 9);
 
@@ -355,11 +355,10 @@ function init() {
       current = idx;
       const L = layout[idx];
       opacityTarget = small() ? L.op * (idx === 0 || idx === 7 ? 0.75 : 0.6) : L.op;
-      if (reduced) pos.set(baked[idx]);
+      if (reduced) renderStatic();
     }
   }
   addEventListener("scroll", pickScene, { passive: true });
-  pickScene();
 
   /* ---------- Pointer ---------- */
   const mouse = new THREE.Vector2(0, 0);
@@ -367,11 +366,13 @@ function init() {
   const ray = new THREE.Raycaster();
   const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const hit = new THREE.Vector3();
-  addEventListener("pointermove", (e) => {
-    mouse.set(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5);
-    mouseNDC.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
-  }, { passive: true });
-  document.addEventListener("pointerleave", () => mouseNDC.set(9, 9));
+  if (!reduced) {
+    addEventListener("pointermove", (e) => {
+      mouse.set(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5);
+      mouseNDC.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    }, { passive: true });
+    document.addEventListener("pointerleave", () => mouseNDC.set(9, 9));
+  }
 
   /* ---------- Resize ---------- */
   let rt;
@@ -391,21 +392,63 @@ function init() {
 
   /* ---------- Loop ---------- */
   const clock = new THREE.Clock();
-  let running = true;
+  let running = !document.hidden;
+  let rafId = null;
+  let first = true;
+
+  function renderScene() {
+    renderer.render(scene, camera);
+    if (first) { first = false; window.dispatchEvent(new Event("scene:ready")); }
+  }
+
+  function renderStatic() {
+    pos.set(baked[current]);
+    geo.attributes.position.needsUpdate = true;
+    uniforms.uOpacity.value = opacityTarget;
+    uniforms.uCenter.value.copy(centers[current]);
+    uniforms.uTime.value = 0;
+    uniforms.uRot.value = 0;
+    uniforms.uMouse.value.set(99, 99, 0);
+
+    core.position.copy(centers[0]);
+    core.scale.setScalar(small() ? 0.62 : 1);
+    core.visible = current === 0;
+    const co = core.visible ? 0.5 : 0;
+    coreLines.material.opacity = co;
+    coreInner.material.opacity = co * 1.6;
+    ring1.material.opacity = co * 0.7;
+    ring2.material.opacity = co * 0.5;
+
+    camera.position.set(0, 0, 9);
+    camera.lookAt(0, 0, 0);
+    renderScene();
+  }
+
+  function scheduleTick() {
+    if (!reduced && running && rafId === null) rafId = requestAnimationFrame(tick);
+  }
+
   document.addEventListener("visibilitychange", () => {
+    if (reduced) return;
     running = !document.hidden;
-    if (running) { clock.getDelta(); requestAnimationFrame(tick); }
+    if (running) {
+      clock.getDelta();
+      scheduleTick();
+    } else if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
   });
 
-  let first = true;
   function tick() {
-    if (!running) return;
+    rafId = null;
+    if (!running || reduced) return;
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
-    if (!reduced) uniforms.uTime.value = t;
+    uniforms.uTime.value = t;
 
     const target = baked[Math.max(current, 0)];
-    const k = reduced ? 1 : 1 - Math.pow(1 - 0.045, dt * 60);
+    const k = 1 - Math.pow(1 - 0.045, dt * 60);
     for (let i = 0, j = 0; i < N; i++, j += 3) {
       const kk = Math.min(1, k * speed[i]);
       pos[j] += (target[j] - pos[j]) * kk;
@@ -418,7 +461,7 @@ function init() {
 
     const scrollRot = scrollY * 0.00035;
     uniforms.uCenter.value.lerp(centers[Math.max(current, 0)], Math.min(1, dt * 2.2));
-    uniforms.uRot.value = reduced ? 0 : t * 0.07 + scrollRot;
+    uniforms.uRot.value = t * 0.07 + scrollRot;
     stars.rotation.y = t * 0.006 + scrollRot * 0.5;
     stars.rotation.x = t * 0.003;
 
@@ -449,12 +492,11 @@ function init() {
       uniforms.uMouse.value.set(99, 99, 0);
     }
 
-    renderer.render(scene, camera);
-
-    if (first) { first = false; window.dispatchEvent(new Event("scene:ready")); }
-    requestAnimationFrame(tick);
+    renderScene();
+    scheduleTick();
   }
-  requestAnimationFrame(tick);
+  pickScene();
+  scheduleTick();
 }
 
 function mulberry32(a) {
