@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css?v=20261016-rag" />
+<link rel="stylesheet" href="css/style.css?v=20261018-case" />
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
@@ -103,7 +103,7 @@
         <span class="line outline">Bollepalli</span>
       </h1>
       <p class="hero-role reveal">I build <span class="type-wrap"><span id="typer">RAG pipelines</span><span class="caret"></span></span><br />with <strong class="accent">evidence, not guesswork.</strong></p>
-      <p class="hero-sub reveal">Creator of Flash Resume: AI tailoring with a deterministic evidence gate and verified PDF output. Builder of SkillVector: 95% lower warm-query RAG latency. 2026 CSE (AI &amp; ML) graduate, Wikimedia open-source contributor, AWS and Google Cloud certified.</p>
+      <p class="hero-sub reveal">I fix the backend problems behind AI products: <strong>slow retrieval</strong>, <strong>LLM output you can't trust</strong> and <strong>workflows that break at the last step</strong>. Built Flash Resume (published on PyPI) and SkillVector (95% lower warm-query RAG latency). 2026 CSE (AI &amp; ML) graduate, Wikimedia open-source contributor, AWS and Google Cloud certified.</p>
       <div class="hero-cta reveal">
         <a class="btn btn-primary magnetic" href="#contact">Hire me <span aria-hidden="true">↗</span></a>
         <a class="btn btn-ghost magnetic" href="#flashresume">Explore Flash Resume</a>
@@ -171,6 +171,33 @@
       </div>
     </div>
   </div>
+
+  <div class="wrap impact-index">
+    <div class="impact-head reveal">
+      <span class="flash-label">Problems I've solved · 30-second read</span>
+      <p>Each row is one problem, the system I built for it, and the evidence. Click through for the full case study.</p>
+    </div>
+    <ol class="impact-rows">
+      <li class="impact-row reveal">
+        <a class="impact-name" href="#flashresume"><small>P-01</small>Flash Resume</a>
+        <div><span>Problem</span><p>Tailoring a résumé per job meant a 15–30 min copy-paste loop. AI rewrites invented experience and broke the one-page layout.</p></div>
+        <div><span>What I built</span><p>A local engine where AI proposes edits and a deterministic evidence gate decides what can be claimed.</p></div>
+        <div class="impact-proof"><span>Result</span><p><strong>Select → click → verified 1-page PDF</strong> plus a diff report. Published on PyPI.</p></div>
+      </li>
+      <li class="impact-row reveal">
+        <a class="impact-name" href="#skillvector"><small>P-02</small>SkillVector</a>
+        <div><span>Problem</span><p>Career skill-gap advice was generic and slow: 9.6 s on a warm query.</p></div>
+        <div><span>What I built</span><p>A 3-layer RAG over O*NET data with cache, pgvector hybrid search, batching and a request lock.</p></div>
+        <div class="impact-proof"><span>Result</span><p><strong>9.6 s → 0.48 s</strong> warm queries (−95%). N DB round-trips → 1.</p></div>
+      </li>
+      <li class="impact-row reveal">
+        <a class="impact-name" href="#experience"><small>EXP</small>Wikimedia</a>
+        <div><span>Problem</span><p>Slow SQL on replicated production data and analysis scripts that kept being rewritten.</p></div>
+        <div><span>What I built</span><p>A Streamlit insights dashboard, composite indexes and reusable, unit-tested query modules.</p></div>
+        <div class="impact-proof"><span>Result</span><p><strong>~25% faster SQL</strong>, merged after international code review.</p></div>
+      </li>
+    </ol>
+  </div>
 </section>
 
 <!-- ================= EXPERIENCE ================= -->
@@ -192,6 +219,11 @@
             </div>
             <div class="tl-meta"><span>Jul 2024 – Sep 2025</span><span class="chip">Remote</span></div>
           </header>
+          <div class="case case-compact">
+            <div><span>Problem</span><p>Contributor-trend questions needed slow queries on replicated production data, answered with one-off scripts.</p></div>
+            <div><span>What I built</span><p>A dashboard, composite indexes and reusable query modules with tests.</p></div>
+            <div class="case-result"><span>Result</span><p><strong>~25% faster SQL</strong> · merged into the main repo</p></div>
+          </div>
           <div class="tl-body">
             <ul class="bullets">
               <li>Built a <strong>community insights dashboard</strong> in Python, Streamlit and MySQL that surfaces Wikipedia editor contribution trends across thousands of active contributors.</li>
@@ -235,7 +267,7 @@
         <p class="kicker reveal">03 / Selected systems</p>
         <h2 class="h2 reveal">Things I built, <span class="grad">with the numbers.</span></h2>
       </div>
-      <p class="lead reveal">Each one is deployed or published, has a repo, and has a number I can explain in an interview.</p>
+      <p class="lead reveal">Each case study reads the same way: <strong>the problem</strong>, <strong>what I built</strong>, <strong>how it works</strong> and <strong>the proof</strong>, including what I won't overclaim.</p>
     </div>
 
     <article class="project project-xl flash-project glass reveal" id="flashresume">
@@ -253,19 +285,51 @@
         <div>
           <span class="flash-label">Published Python package · CLI + Manifest V3 extension</span>
           <p class="flash-headline">AI proposes.<br /><span class="grad">Evidence decides.</span></p>
-          <p class="project-pitch">I built a local-first résumé engine that turns a selected job description into a tailored PDF and a reviewable evidence report. Not another full-document rewrite: a controlled pipeline from real experience to verified output.</p>
+          <p class="project-pitch">Turns any job description into a <strong>truthful, ATS-targeted, verified one-page PDF</strong>, from the browser or the terminal. It starts from your real master résumé, maps the JD to evidence you actually have, makes small reviewable edits, and proves the result fits before saving it.</p>
         </div>
-        <div class="flash-problem">
-          <span class="viz-label">The problem / the product decision</span>
-          <p>Job board → AI chat → document editor. Every copy-paste risks unsupported claims and broken layout.</p>
-          <strong>One workflow. Two artifacts. A clear evidence boundary.</strong>
-          <span>Browser or terminal → local engine → PDF + diff report</span>
+        <blockquote class="flash-quote">
+          <p>“Use AI to identify relevance. Use structured evidence to decide what can be claimed. Use a local compiler to prove the result fits.”</p>
+          <span>The design rule behind Flash Resume</span>
+        </blockquote>
+      </div>
+
+      <div class="case">
+        <div>
+          <span>01 · The problem</span>
+          <h4>The 3-tab shuffle.</h4>
+          <p>Job board → ChatGPT → LaTeX/Overleaf. Rewrite bullets, paste back, compile, hope it still fits one page. When it doesn't, trim and recompile.</p>
+          <p class="case-note">That loop costs <strong>15–30 min per application</strong> (README estimate). Full AI rewrites make it worse: they invent experience you don't have and break the layout.</p>
+        </div>
+        <div>
+          <span>02 · What I built</span>
+          <h4>A pipeline with a hard boundary.</h4>
+          <p>A local FastAPI engine with a thin browser and CLI client. The LLM extracts requirements and proposes a structured plan. A <strong>deterministic evidence matcher</strong> checks every requirement against the master résumé before anything is claimed.</p>
+        </div>
+        <div class="case-result">
+          <span>03 · The result</span>
+          <h4>Select. Click. Review.</h4>
+          <p>Highlight a JD and click the page button. The engine saves an <strong>upload-ready PDF</strong> and a <strong>readable diff report</strong> with the evidence behind every change. Unsupported claims stay out of Truthful mode.</p>
         </div>
       </div>
+
+      <div class="flash-compare" role="region" aria-label="Manual workflow compared with Flash Resume" tabindex="0">
+        <span class="flash-label flash-compare-label">Before / after · from the project README</span>
+        <table>
+          <thead><tr><th scope="col">Concern</th><th scope="col">Manual workflow</th><th scope="col">Flash Resume</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Time per application</th><td>15–30 minutes</td><td>One focused workflow</td></tr>
+            <tr><th scope="row">Keyword targeting</th><td>You guess what to add</td><td>JD mapped to your real evidence</td></tr>
+            <tr><th scope="row">Unsupported claims</th><td>Easy to introduce</td><td>Blocked from normal tailoring</td></tr>
+            <tr><th scope="row">Layout risk</th><td>Overflow discovered after editing</td><td>Compiled and page-checked before saving</td></tr>
+            <tr><th scope="row">Reviewability</th><td>Edits scattered across tools</td><td>PDF + before/after diff report</td></tr>
+            <tr><th scope="row">Workflow</th><td>Job board → AI chat → editor</td><td>Select JD → click → review output</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="project-grid3 flash-proof">
-        <div class="metric"><strong>2 parallel plans</strong><span>Separate core and project specialists, merged and validated locally</span></div>
-        <div class="metric"><strong>1-page verification</strong><span>Typst compilation followed by a pypdf page-count check</span></div>
-        <div class="metric"><strong>44 tests</strong><span>Passing tests reported in the supplied project README</span></div>
+        <div class="metric"><strong>2 parallel plans</strong><span>Core (summary, skills, experience) and projects specialists, merged and validated locally</span></div>
+        <div class="metric"><strong>1-page verification</strong><span>Typst compilation, then a pypdf page-count check before saving</span></div>
+        <div class="metric"><strong>44 tests</strong><span>Passing tests reported in the project README (not rerun here)</span></div>
       </div>
 
       <div class="flash-lab" data-flash-demo>
@@ -303,11 +367,40 @@
         <div class="flash-subhead"><span class="flash-label">Under the hood</span><h4>A language model inside a system, not in charge of it.</h4></div>
         <ol class="flash-flow">
           <li><span>01 / Input</span><strong>Selected JD</strong><small>Browser selection, clipboard, file or stdin</small></li>
-          <li><span>02 / Plan</span><strong>Parallel specialists</strong><small>Core + project schemas via Gemini or Groq</small></li>
+          <li><span>02 / Plan</span><strong>Parallel specialists</strong><small>Core + project schemas via Gemini or Groq; full-plan fallback on failure</small></li>
           <li class="flash-flow-gate"><span>03 / Boundary</span><strong>Merge &amp; validate</strong><small>IDs, evidence, lengths, metrics and mode rules</small></li>
           <li><span>04 / Compile</span><strong>Typst + pypdf</strong><small>Density fallback and page-count verification</small></li>
           <li><span>05 / Review</span><strong>PDF + report</strong><small>Changes, evidence coverage and output diagnostics</small></li>
         </ol>
+      </div>
+
+      <div class="flash-detail-grid flash-depth">
+        <section class="flash-detail">
+          <span class="flash-label">Hard problem 01 · matching</span>
+          <h4>Requirements aren't keywords.</h4>
+          <p class="flash-detail-lead">A naive matcher fails either way: it rejects candidates who meet one of several alternatives, or credits compound requirements that are only half-met. The evidence matcher normalises each requirement first.</p>
+          <dl class="match-table">
+            <div><dt><code>Java/TypeScript/Python</code></dt><dd>Alternatives: any one with evidence counts</dd></div>
+            <div><dt><code>AWS, GCP, Azure</code></dt><dd>Comma-separated alternatives</dd></div>
+            <div><dt><code>data pipelines or APIs</code></dt><dd>Natural-language alternatives</dd></div>
+            <div><dt><code>supervised, unsupervised, and RL</code></dt><dd>Compound group: <em>partial</em> credit if only part is supported</dd></div>
+            <div><dt><code>Bachelor's degree</code></dt><dd>Matched against structured education, such as B.Tech in CS</dd></div>
+            <div><dt><code>Software Engineer (AI)</code></dt><dd>Job-title context, filtered out instead of treated as a skill</dd></div>
+          </dl>
+        </section>
+        <section class="flash-detail">
+          <span class="flash-label">Hard problem 02 · trust</span>
+          <h4>Who gets the final say.</h4>
+          <p class="flash-detail-lead">The language model proposes relevance. It never decides what the résumé can claim. Each layer owns one job.</p>
+          <ol class="layer-list">
+            <li><span>LLM</span><p>Extracts requirements, proposes a structured plan</p><code>llm.py · groq_llm.py</code></li>
+            <li class="is-gate"><span>Evidence</span><p>Checks every requirement against the master résumé: covered · partial · unsupported</p><code>evidence.py</code></li>
+            <li><span>Tailor</span><p>Applies sanitised edits; keeps Interview-mode familiarity separate</p><code>tailor.py · validator.py</code></li>
+            <li><span>Compiler</span><p>Renders with Typst at standard → compact → tight density</p><code>compiler.py</code></li>
+            <li><span>Verify</span><p>Checks the compiled PDF's page count before saving</p><code>pypdf</code></li>
+            <li><span>Client</span><p>Collects selected text and mode; holds no keys or résumé</p><code>extension/ · cli.py</code></li>
+          </ol>
+        </section>
       </div>
 
       <div class="flash-detail-grid">
@@ -315,8 +408,8 @@
           <span class="flash-label">Engineering decisions</span>
           <h4>Reliability is part of the workflow.</h4>
           <ul class="bullets">
-            <li><strong>Structured plans:</strong> focused core and project calls run concurrently. The merger validates edits; a full-plan fallback handles specialist-call failure.</li>
-            <li><strong>Beyond keyword matching:</strong> alternatives, compound requirements, education equivalence and partial evidence receive distinct treatment.</li>
+            <li><strong>Structured plans:</strong> two focused calls run concurrently, one for summary, skills and experience and one for projects. Separate <code>CoreTailorPlan</code> and <code>ProjectTailorPlan</code> schemas merge into a backward-compatible <code>TailorPlan</code>. If a specialist fails, the full-plan call takes over.</li>
+            <li><strong>Résumé import:</strong> <code>fs import resume.pdf</code> extracts text, recovers hyperlinks hidden behind labels like "GitHub", cleans PDF artifacts and normalises everything into the structured master-résumé model.</li>
             <li><strong>Layout recovery:</strong> standard → compact → tight density, followed by targeted trimming that protects the strongest content.</li>
             <li><strong>Thin clients:</strong> the extension collects selected text and mode. The local FastAPI engine owns configuration, keys and generated files.</li>
           </ul>
@@ -341,9 +434,41 @@ fs doctor</pre>
       </div>
 
       <div class="flash-output-grid">
-        <div class="flash-artifacts"><span class="flash-label">Reviewable by design</span><h4>The output has an audit trail.</h4><div><code>Company_Role.pdf</code><span>Compiled résumé, page-checked before saving</span></div><div><code>Company_Role.diff.md</code><span>Before/after edits, evidence assignments, covered / partial / unsupported requirements, page count and compilation timings</span></div></div>
+        <div class="flash-artifacts"><span class="flash-label">Reviewable by design</span><h4>The output has an audit trail.</h4><div><code>Company_Role.pdf</code><span>Compiled résumé, page-checked before saving</span></div><div><code>Company_Role.diff.md</code><span>Target company and role, evidence-based coverage score, covered / partial / unsupported requirements, the evidence used for each match, applied bullet and skill changes, familiarity skills (Interview mode only), page count and compile timings</span></div></div>
         <div class="flash-caveats"><span class="flash-label">Boundaries, not marketing promises</span><h4>What I won't overclaim.</h4><p>The coverage score measures supported extracted requirements, not acceptance by an external ATS. Imported résumés need review. The configured AI provider processes the submitted JD; local-first does not mean offline. Windows is required for background autostart.</p></div>
       </div>
+      <details class="deep flash-engine">
+        <summary>Backend deep dive: local engine API &amp; change discipline <span>+</span></summary>
+        <div class="flash-detail-grid">
+          <div class="flash-api">
+            <span class="flash-label">Local FastAPI engine · 127.0.0.1:13450</span>
+            <dl class="flash-endpoints">
+              <div><dt><b class="m get">GET</b>/api/status</dt><dd>Engine online, résumé configured, active provider, key present</dd></div>
+              <div><dt><b class="m post">POST</b>/api/tailor</dt><dd>Tailor the selected JD text</dd></div>
+              <div><dt><b class="m post">POST</b>/api/config/provider</dt><dd>Select Gemini or Groq</dd></div>
+              <div><dt><b class="m post">POST</b>/api/config/output-dir</dt><dd>Set the output folder</dd></div>
+            </dl>
+            <pre class="flash-json"><span class="d-ctx">// POST /api/tailor</span>
+{
+  "jd": "Selected job description text...",
+  "company": "Optional company heading",
+  "role": "Optional role heading",
+  "mode": "truthful"   <span class="d-ctx">// or "interview_prep"</span>
+}</pre>
+          </div>
+          <div>
+            <span class="flash-label">How I change matching logic safely</span>
+            <ol class="flash-steps">
+              <li>Add or update a focused test.</li>
+              <li>Verify supported, partial and unsupported cases.</li>
+              <li>Confirm unsupported claims stay out of normal experience.</li>
+              <li>Compile a representative résumé and verify its page count.</li>
+              <li>Regenerate the diff report and inspect the real output.</li>
+            </ol>
+            <p class="flash-detail-lead">Health checks: <code>fs doctor</code> validates config, résumé, provider, Typst and the output folder. <code>fs autostart status</code> shows the Windows login registration.</p>
+          </div>
+        </div>
+      </details>
       <details class="deep flash-benchmarks">
         <summary>Earlier benchmark context &amp; release workflow <span>+</span></summary>
         <ul class="bullets">
@@ -366,6 +491,24 @@ fs doctor</pre>
         <div class="project-links">
           <a class="btn btn-sm btn-primary" href="https://skill-vector-kyzv.vercel.app" target="_blank" rel="noopener">Live ↗</a>
           <a class="btn btn-sm btn-ghost" href="https://github.com/PavanBollepalli/SkillVector" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+
+      <div class="case">
+        <div>
+          <span>01 · The problem</span>
+          <h4>Generic advice, slow answers.</h4>
+          <p>"What should I learn to become an ML Engineer?" usually gets an answer that isn't grounded in real job data. The first version also took <strong>9.6 s</strong> on a warm query.</p>
+        </div>
+        <div>
+          <span>02 · What I built</span>
+          <h4>A 3-layer retrieval path.</h4>
+          <p>An in-memory cache, then <strong>pgvector hybrid search</strong> (HNSW + B-tree filter) over O*NET 29.0, then live web fetch only on a cold miss. Per-skill lookups were batched into one query, and a request lock blocks duplicate runs.</p>
+        </div>
+        <div class="case-result">
+          <span>03 · The result</span>
+          <h4>9.6 s → 0.48 s.</h4>
+          <p><strong>95% lower</strong> warm-query latency, N database round-trips → 1, and one generation run per request instead of three on double-clicks. This is retrieval latency, not total LLM generation time.</p>
         </div>
       </div>
 
@@ -510,7 +653,7 @@ fs doctor</pre>
     <div class="principles">
       <article class="principle glass tilt reveal"><span class="p-num">01</span><h3>Measure, then optimise</h3><p>Profile first, cache the hot path, batch the cold one. That's how 9.6 s became 0.48 s.</p><code>warm: 9600ms → 480ms</code></article>
       <article class="principle glass tilt reveal"><span class="p-num">02</span><h3>Idempotent by default</h3><p>Users double-click and clients retry. A request lock means one expensive run, not three.</p><code>3 requests → 1 run</code></article>
-      <article class="principle glass tilt reveal"><span class="p-num">03</span><h3>Guardrails over vibes</h3><p>LLM output gets checked before anyone sees it. Flash Resume's evidence gate drops anything the source can't back up.</p><code>hallucinations: dropped</code></article>
+      <article class="principle glass tilt reveal"><span class="p-num">03</span><h3>Guardrails over vibes</h3><p>The model proposes; a deterministic check decides. Flash Resume's evidence gate keeps anything the master résumé can't back up out of normal claims.</p><code>unsupported → excluded</code></article>
       <article class="principle glass tilt reveal"><span class="p-num">04</span><h3>Ship with CI</h3><p>Unit tests, GitHub Actions, and tag-triggered PyPI releases. If shipping is manual, it eventually gets skipped.</p><code>git tag v1.x → pypi</code></article>
     </div>
   </div>

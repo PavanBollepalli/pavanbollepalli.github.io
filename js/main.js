@@ -385,12 +385,19 @@
       experience: [{
         org: "Wikimedia Foundation", title: "Open Source Developer", remote: true,
         period: "2024-07 → 2025-09",
+        problem: "Slow queries on replicated production data and one-off analysis scripts that kept being rewritten",
+        solution: "Community insights dashboard plus reusable, tested Python query modules",
         impact: ["~25% faster SQL via composite indexes + query restructuring", "Python + Streamlit + MySQL community insights dashboard", "Reusable, unit-tested Python query modules", "Merged into main repo after international code review"],
       }],
       projects: [
         {
           name: "Flash Resume", type: "evidence-led local-first CLI + browser extension", status: "published_on_pypi",
+          problem: "Tailoring a resume per job is a 3-tab shuffle (job board → AI chat → LaTeX) that the README estimates at 15–30 min per application; full AI rewrites invent experience and break the one-page layout",
+          solution: "A local engine where the LLM proposes relevance and a deterministic evidence gate decides what can be claimed, then Typst compiles and pypdf verifies one page",
+          result: "Select JD text → click → upload-ready PDF + reviewable diff report",
           architecture: ["Parallel core + project plans", "Deterministic evidence matching", "Sanitized edits", "Typst compilation + pypdf verification"],
+          matcher: ["alternatives: Java/TypeScript/Python", "comma + natural-language alternatives", "compound requirements with partial credit", "education equivalence", "job-title phrases filtered out"],
+          engine_api: { base: "http://127.0.0.1:13450", tailor: "POST /api/tailor { jd, company?, role?, mode: truthful | interview_prep }", status: "GET /api/status" },
           outputs: ["Company_Role.pdf", "Company_Role.diff.md"],
           modes: { truthful: "supported evidence only", interview_prep: "separate, clearly labeled familiarity; not production experience" },
           tests: { count: 44, source: "supplied README; not rerun by this portfolio" },
@@ -398,7 +405,7 @@
           stack: ["Python", "FastAPI", "Typst", "pypdf", "Chrome MV3", "Gemini / Groq"],
           pypi: "https://pypi.org/project/flash-resume/", repo: "https://github.com/PavanBollepalli/flash-resume",
         },
-        { name: "SkillVector", type: "AI career intelligence", impact: "Warm-query RAG latency 9.6s → 0.48s (−95%); not total LLM generation time", stack: ["FastAPI", "pgvector", "Llama 3.3 70B", "Next.js 16"], live: "https://skill-vector-kyzv.vercel.app" },
+        { name: "SkillVector", type: "AI career intelligence", problem: "Skill-gap advice that is generic, ungrounded and slow (9.6s warm-query baseline)", solution: "3-layer RAG over O*NET 29.0: in-memory cache → pgvector hybrid search → live web fetch, with batched queries and a request lock", impact: "Warm-query RAG latency 9.6s → 0.48s (−95%); not total LLM generation time", stack: ["FastAPI", "pgvector", "Llama 3.3 70B", "Next.js 16"], live: "https://skill-vector-kyzv.vercel.app" },
       ],
       roadmap: {
         disclaimer: "Planned concepts, not shipped claims. Scope may change after user discovery.",
