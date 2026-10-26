@@ -11,6 +11,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import {
+  Fragment,
   useEffect,
   useRef,
   useState,
@@ -112,17 +113,19 @@ export function Words({
   return (
     <span className={`words ${className}`}>
       {words.map((word, index) => (
-        <span className="word" key={`${word}-${index}`}>
-          <motion.span
-            className="word-inner"
-            initial={{ y: "115%", rotate: soft ? 0 : 4, opacity: 0 }}
-            whileInView={{ y: "0%", rotate: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: soft ? 0.5 : duration, delay: delay + index * (soft ? stagger * 0.5 : stagger), ease: EASE }}
-          >
-            {word}
-          </motion.span>
-        </span>
+        <Fragment key={`${word}-${index}`}>
+          {index > 0 && " "}
+          <span className="word">
+            <motion.span
+              className="word-inner"
+              initial={{ y: "115%", rotate: soft ? 0 : 4, opacity: 0 }}
+              animate={{ y: "0%", rotate: 0, opacity: 1 }}
+              transition={{ duration: soft ? 0.5 : duration, delay: delay + index * (soft ? stagger * 0.5 : stagger), ease: EASE }}
+            >
+              {word}
+            </motion.span>
+          </span>
+        </Fragment>
       ))}
     </span>
   );
@@ -136,8 +139,7 @@ export function Word({ children, delay = 0, className = "" }: { children: ReactN
       <motion.span
         className="word-inner"
         initial={{ y: "115%", rotate: soft ? 0 : 4, opacity: 0 }}
-        whileInView={{ y: "0%", rotate: 0, opacity: 1 }}
-        viewport={{ once: true, amount: 0.4 }}
+        animate={{ y: "0%", rotate: 0, opacity: 1 }}
         transition={{ duration: soft ? 0.5 : 0.95, delay, ease: EASE }}
       >
         {children}

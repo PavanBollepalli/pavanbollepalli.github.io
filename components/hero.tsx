@@ -4,50 +4,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, type ReactNode } from "react";
 import { profile } from "@/lib/content";
 import { Aurora, EASE, Magnetic, Parallax, Reveal, Spotlight, Tilt, Word } from "./motion";
 import { MiniTerminal, SystemSculpture } from "./diagrams";
 
-const TAGLINE = [
-  { verb: "explore", join: null },
-  { verb: "experiment", join: "," },
-  { verb: "say hello", join: "&&" },
-] as const;
-
-/**
- * The hero's opening line, staged as a REPL session: a prompt, three verbs, a caret.
- * The verbs take turns in the light instead of sitting static.
- */
-function Tagline() {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setActive(index => (index + 1) % TAGLINE.length), 2100);
-    return () => window.clearInterval(timer);
-  }, []);
-
+function HeroLine({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
-    <p className="hero-tagline" aria-label="Explore, experiment and say hello.">
-      <span className="tagline-prompt" aria-hidden="true">
-        pavan@portfolio<span className="tagline-tilde">:~$</span>
-      </span>
-      <span className="tagline-line" aria-hidden="true">
-        {TAGLINE.map((entry, index) => (
-          <span className="tagline-item" key={entry.verb}>
-            {entry.join && <span className={`tagline-join ${entry.join === "&&" ? "is-op" : ""}`}>{entry.join}</span>}
-            <motion.span
-              className={`tagline-verb ${active === index ? "is-live" : ""}`}
-              animate={{ opacity: active === index ? 1 : 0.4, y: active === index ? -2 : 0 }}
-              transition={{ duration: 0.5, ease: EASE }}
-            >
-              {entry.verb}
-            </motion.span>
-          </span>
-        ))}
-        <span className="tagline-caret" />
-      </span>
-    </p>
+    <motion.span
+      className="hero-line hero-line-animated"
+      initial={{ opacity: 0, y: 28, filter: "blur(8px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 0.9, delay, ease: EASE }}
+    >
+      {children}
+    </motion.span>
   );
 }
 
@@ -127,26 +98,9 @@ export function Hero() {
             </span>
           </Reveal>
           <h1 className="hero-title">
-            <span className="hero-line">
-              <Word delay={0.04}>Intelligent</Word>{" "}
-              <Word delay={0.1}>systems.</Word>
-            </span>
-            <span className="hero-line">
-              <Word delay={0.16}>Engineered</Word>{" "}
-              <Word delay={0.22}>to</Word>{" "}
-              <Word delay={0.28}>
-                <em className="gradient-blue">last.</em>
-              </Word>
-            </span>
+            <HeroLine delay={0.08}>Intelligent systems.</HeroLine>
+            <HeroLine delay={0.2}>Engineered to <em className="gradient-blue">last.</em></HeroLine>
           </h1>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.8, delay: 0.42, ease: EASE }}
-          >
-            <Tagline />
-          </motion.div>
           <motion.p
             className="hero-description"
             initial={{ opacity: 0, y: 16 }}

@@ -1,3 +1,9 @@
 import type { MetadataRoute } from "next";
-import { projects,notes } from "@/lib/content";
-export default function sitemap():MetadataRoute.Sitemap{return ["","/about","/work","/notes",...projects.map(project=>`/work/${project.slug}`),...notes.map(note=>`/notes/${note.slug}`)].map(path=>({url:`https://pavanbollepalli.me${path}`,changeFrequency:"monthly",priority:path===""?1:.7}));}
+import { notes, projects } from "@/lib/content";
+
+const pages = ["", "/about", "/work", "/notes", "/blog", "/guestbook", "/uses", "/bucket-list", "/links", "/contact", "/legal/privacy", "/legal/terms", "/attribution", "/rss.xml"];
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [...pages, ...projects.map(project => `/work/${project.slug}`), ...notes.flatMap(note => [`/notes/${note.slug}`, `/blog/${note.slug}`])]
+    .map(path => ({ url: `https://pavanbollepalli.me${path}`, changeFrequency: "monthly", priority: path === "" ? 1 : 0.7 }));
+}
+

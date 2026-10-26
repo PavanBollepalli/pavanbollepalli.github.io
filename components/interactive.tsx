@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, RotateCw } from "lucide-react";
+import { Eye } from "lucide-react";
 import {
   animate,
   motion,
@@ -110,6 +110,7 @@ const STAFF_WIDTH = 60;
  * card keeps answering as long as someone keeps running the staff across it.
  */
 export function LanyardScene() {
+  const reducedMotion = useReducedMotionPreference();
   const sceneRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLButtonElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -133,9 +134,16 @@ export function LanyardScene() {
   const intro = useRef<{ stop: () => void } | null>(null);
 
   useEffect(() => {
+    if (reducedMotion) {
+      rotation.set(0);
+      return;
+    }
     intro.current = animate(rotation, [-4, -9, 2, -4], { duration: 1.9, ease: "easeInOut" });
-    return () => intro.current?.stop();
-  }, [rotation]);
+    return () => {
+      intro.current?.stop();
+      intro.current = null;
+    };
+  }, [reducedMotion, rotation]);
 
   useEffect(() => () => { if (scanTimer.current) window.clearTimeout(scanTimer.current); }, []);
 
@@ -146,6 +154,7 @@ export function LanyardScene() {
     lastAdvance.current = now;
 
     intro.current?.stop();
+    intro.current = null;
     setScanning(true);
     if (scanTimer.current) window.clearTimeout(scanTimer.current);
     scanTimer.current = window.setTimeout(() => setScanning(false), 780);
@@ -158,6 +167,7 @@ export function LanyardScene() {
     const scene = sceneRef.current;
     if (!scene) return;
     intro.current?.stop();
+    intro.current = null;
     const bounds = scene.getBoundingClientRect();
     const pointerX = event.clientX - bounds.left;
     const next = Math.max(-STAFF_WIDTH * 0.4, Math.min(bounds.width - STAFF_WIDTH * 0.6, pointerX - STAFF_WIDTH / 2));
@@ -185,8 +195,7 @@ export function LanyardScene() {
   }
 
   function rest() {
-    if (intro.current) return;
-    rotation.set(-4);
+    rotation.set(reducedMotion ? 0 : -4);
     charge.set(0);
     armed.current = true;
   }
@@ -199,7 +208,7 @@ export function LanyardScene() {
   }
 
   return (
-    <div className="lanyard-scene" ref={sceneRef} onPointerMove={track} onPointerLeave={rest} data-scanning={scanning ? "true" : "false"}>
+    <div className="lanyard-scene" ref={sceneRef} onPointerMove={track} onPointerLeave={rest} data-scanning={scanning ? "true" : "false"} data-reduced-motion={reducedMotion ? "true" : "false"}>
       <motion.svg
         className="engineering-staff"
         viewBox="0 0 80 600"
@@ -214,7 +223,7 @@ export function LanyardScene() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.g
-          animate={{ y: [0, -7, 0] }}
+          animate={reducedMotion ? undefined : { y: [0, -7, 0] }}
           transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
         >
           <path d="M40 12C20 15 8 31 12 53C14 73 31 80 28 102C24 127 23 155 29 190C36 227 26 264 27 302C28 338 22 365 29 405C35 444 32 499 37 554L40 586L43 554C48 499 45 444 51 405C58 365 52 338 53 302C54 264 44 227 51 190C57 155 56 127 52 102C49 80 66 73 68 53C72 31 60 15 40 12Z" />
@@ -232,7 +241,7 @@ export function LanyardScene() {
         </motion.g>
       </motion.svg>
 
-      <motion.div className="lanyard-rig" style={{ rotate: rotateSpring }}>
+      <motion.div className="lanyard-rig" style={{ rotate: reducedMotion ? 0 : rotateSpring }}>
         <div className="lanyard-strap">PB / ENGINEER / BUILDER</div>
         <button
           id={cardId}
@@ -311,11 +320,6 @@ export function LanyardScene() {
         </button>
       </motion.div>
 
-      <div className="lanyard-controls">
-        <button type="button" aria-controls={cardId} aria-pressed={back} onClick={() => { setRevealed(true); setBack(value => !value); }}>
-          <RotateCw size={15} aria-hidden="true" /> Flip card
-        </button>
-      </div>
       <span className="lanyard-note" id={noteId}>
         Run the staff across the card.
       </span>

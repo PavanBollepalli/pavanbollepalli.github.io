@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import {
   ArrowRight,
   Check,
@@ -10,19 +10,15 @@ import {
   FileCode2,
   GitBranch,
   Hexagon,
-  Layers3,
   LockKeyhole,
   Network,
-  Pause,
-  Play,
   ShieldCheck,
   Sparkles,
   SquareTerminal,
-  Terminal,
-  Workflow,
   Zap,
 } from "lucide-react";
-import { animate, motion, useMotionValue, useSpring, useTransform, type AnimationPlaybackControls, type MotionValue } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform, type MotionValue } from "motion/react";
+import { siClaudecode, siDocker, siGit, siGhostty, siOpenaigym, type SimpleIcon } from "simple-icons";
 
 export function SystemSculpture({ compact = false }: { compact?: boolean }) {
   return <div className={`system-sculpture ${compact ? "compact" : ""}`} aria-hidden="true">
@@ -77,155 +73,81 @@ export function EvidenceLab() {
 }
 
 const stack = [
-  { name: "Python", group: "Backend", icon: Terminal },
-  { name: "Next.js", group: "Frontend", icon: FileCode2 },
-  { name: "RAG pipelines", group: "AI", icon: Workflow },
-  { name: "Docker", group: "Tools", icon: Layers3 },
-  { name: "PostgreSQL", group: "Backend", icon: Database },
-  { name: "React", group: "Frontend", icon: Layers3 },
-  { name: "FastAPI", group: "Backend", icon: Zap },
-  { name: "pgvector", group: "AI", icon: Database },
-  { name: "AWS", group: "Tools", icon: Network },
-  { name: "TypeScript", group: "Frontend", icon: FileCode2 },
-  { name: "ChromaDB", group: "AI", icon: Database },
-  { name: "GitHub Actions", group: "Tools", icon: Workflow },
-  { name: "Node.js", group: "Backend", icon: Network },
-  { name: "Groq", group: "AI", icon: Sparkles },
-  { name: "Google Cloud", group: "Tools", icon: Network },
-  { name: "MySQL", group: "Backend", icon: Database },
-  { name: "Embeddings", group: "AI", icon: Network },
-  { name: "Typst", group: "Tools", icon: FileCode2 },
-  { name: "Streamlit", group: "Frontend", icon: Layers3 },
-  { name: "Evidence gates", group: "AI", icon: ShieldCheck },
-  { name: "Chrome MV3", group: "Tools", icon: FileCode2 },
-  { name: "Git", group: "Tools", icon: Workflow },
+  { name: "Python", mark: "Py", tone: "#f2c94c", group: "Backend" },
+  { name: "Next.js", mark: "N", tone: "#f4f4f5", group: "Frontend" },
+  { name: "React", mark: "⚛", tone: "#61dafb", group: "Frontend" },
+  { name: "TypeScript", mark: "TS", tone: "#3178c6", group: "Frontend" },
+  { name: "Tailwind CSS", mark: "≈", tone: "#38bdf8", group: "Frontend" },
+  { name: "Motion.dev", mark: "〰", tone: "#e5dc00", group: "Frontend" },
+  { name: "TanStack Query", mark: "✿", tone: "#ef4770", group: "Frontend" },
+  { name: "Zustand", mark: "◉", tone: "#f4f4f5", group: "Frontend" },
+  { name: "Expo", mark: "⌃", tone: "#f4f4f5", group: "Frontend" },
+  { name: "CSS", mark: "CSS", tone: "#bd75ed", group: "Frontend" },
+  { name: "Figma", mark: "●", tone: "#f46b75", group: "Frontend" },
+  { name: "RAG pipelines", mark: "RAG", tone: "#66a8ff", group: "AI" },
+  { name: "Docker", mark: "D", tone: "#2496ed", group: "Tools" },
+  { name: "PostgreSQL", mark: "PG", tone: "#6ca6d9", group: "Backend" },
+  { name: "FastAPI", mark: "F", tone: "#00b48a", group: "Backend" },
+  { name: "pgvector", mark: "V", tone: "#79a9ff", group: "AI" },
+  { name: "AWS", mark: "aws", tone: "#ffad35", group: "Tools" },
+  { name: "ChromaDB", mark: "C", tone: "#9c70ed", group: "AI" },
+  { name: "GitHub Actions", mark: "GH", tone: "#f4f4f5", group: "Tools" },
+  { name: "Node.js", mark: "JS", tone: "#83cd29", group: "Backend" },
+  { name: "Groq", mark: "G", tone: "#f55036", group: "AI" },
+  { name: "Google Cloud", mark: "G", tone: "#4285f4", group: "Tools" },
+  { name: "MySQL", mark: "SQL", tone: "#e48e36", group: "Backend" },
+  { name: "Embeddings", mark: "∑", tone: "#a689ff", group: "AI" },
+  { name: "Typst", mark: "T", tone: "#239dad", group: "Tools" },
+  { name: "Streamlit", mark: "S", tone: "#ff4b4b", group: "Frontend" },
+  { name: "Evidence gates", mark: "✓", tone: "#87d4bb", group: "AI" },
+  { name: "Chrome MV3", mark: "CH", tone: "#64a3ff", group: "Tools" },
+  { name: "Git", mark: "⌘", tone: "#f16b54", group: "Tools" },
 ] as const;
 
 const stackFilters = ["All", "Frontend", "Backend", "AI", "Tools"] as const;
 
-const ORBIT_DURATION = 34; // seconds for one full revolution
-const ORBIT_TILT = 30;     // how far the ring's near edge drops below the far edge
-
-/**
- * One tag riding the orbit.
- *
- * Position is derived from a shared clock rather than React state, so the whole ring
- * animates on the compositor. The ring spins clockwise: tags cross the front from
- * right to left, sink behind the centre, and come back around from the right.
- */
-function OrbitTag({
-  clock, index, total, radius, name, icon: Icon, group,
-}: {
-  clock: MotionValue<number>;
-  index: number;
-  total: number;
-  radius: number;
-  name: string;
-  icon: typeof Terminal;
-  group: string;
-}) {
-  const theta = useTransform(clock, value => -(value + index / total) * Math.PI * 2);
-  const depth = useTransform(theta, value => Math.cos(value));
-  const x = useTransform(theta, value => Math.sin(value) * radius);
-  const y = useTransform(depth, value => value * ORBIT_TILT);
-  const scale = useTransform(depth, value => 0.6 + ((value + 1) / 2) * 0.42);
-  const opacity = useTransform(depth, value => 0.18 + Math.pow((value + 1) / 2, 1.5) * 0.82);
-  const blur = useTransform(depth, value => `blur(${((1 - (value + 1) / 2) * 2.1).toFixed(2)}px)`);
-  const zIndex = useTransform(depth, value => Math.round(value * 60) + 60);
-
-  return (
-    <motion.span
-      className={`orbit-tag tech-${group.toLowerCase()}`}
-      style={{ x, y, scale, opacity, filter: blur, zIndex, position: "absolute", left: "50%", top: "50%" }}
-    >
-      <Icon size={14} />
-      <span>{name}</span>
-    </motion.span>
-  );
-}
-
 export function StackCard() {
   const [filter, setFilter] = useState<(typeof stackFilters)[number]>("All");
-  const [paused, setPaused] = useState(false);
-  const [radius, setRadius] = useState(190);
-  // The ring is positioned entirely by MotionValues. Rendering it on the server would
-  // bake rounded numbers into the HTML that the client then re-computes at full
-  // precision, so the ring waits for the client and the fixed-height stage holds its space.
-  const [mounted, setMounted] = useState(false);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const clock = useMotionValue(0);
-  const controls = useRef<AnimationPlaybackControls | null>(null);
-
   const visibleStack = stack.filter(item => filter === "All" || item.group === filter);
-
-  useEffect(() => setMounted(true), []);
-
-  useEffect(() => {
-    controls.current = animate(clock, [0, 1], { duration: ORBIT_DURATION, repeat: Infinity, ease: "linear" });
-    return () => controls.current?.stop();
-  }, [clock]);
-
-  useEffect(() => {
-    if (paused) controls.current?.pause();
-    else controls.current?.play();
-  }, [paused]);
-
-  // The ring has to fit whatever width the bento hands it.
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    const measure = () => setRadius(Math.max(120, stage.clientWidth / 2 - 78));
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(stage);
-    return () => observer.disconnect();
-  }, []);
+  const rows = Array.from({ length: 4 }, (_, row) => visibleStack.filter((_, index) => index % 4 === row));
 
   return (
-    <div className={`bento-card stack-card ${paused ? "is-paused" : ""}`}>
+    <div className="bento-card stack-card">
       <div className="stack-heading">
         <div>
           <span className="eyebrow">DAILY DRIVERS</span>
           <h3>The stack behind everything I ship.</h3>
         </div>
-        <button className="stack-pause" type="button" aria-pressed={paused} onClick={() => setPaused(value => !value)}>
-          {paused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
-          <span>{paused ? "Play" : "Pause"}</span>
-        </button>
       </div>
 
-      <div
-        className="stack-orbit"
-        ref={stageRef}
-        aria-hidden="true"
-        onPointerEnter={() => controls.current?.pause()}
-        onPointerLeave={() => { if (!paused) controls.current?.play(); }}
-      >
-        <span className="orbit-floor" />
-        <span className="orbit-hub">
-          <em>{visibleStack.length}</em>
-          <small>{filter === "All" ? "TOOLS" : filter.toUpperCase()}</small>
-        </span>
-        <div className="orbit-ring" key={filter}>
-          {mounted && visibleStack.map((item, index) => (
-            <OrbitTag
-              key={item.name}
-              clock={clock}
-              index={index}
-              total={visibleStack.length}
-              radius={radius}
-              name={item.name}
-              icon={item.icon}
-              group={item.group}
-            />
-          ))}
-        </div>
+      <div className={`stack-chip-grid ${filter !== "All" ? "is-filtered" : ""}`} aria-label={`${filter} technologies`}>
+        {filter !== "All" ? visibleStack.map(item => (
+          <span className={`tech-tag tech-${item.group.toLowerCase()}`} key={item.name}>
+            <span className="tech-mark" style={{ "--mark-color": item.tone } as CSSProperties} aria-hidden="true">{item.mark}</span>
+            {item.name}
+          </span>
+        )) : rows.map((row, rowIndex) => row.length > 0 && (
+          <div className="stack-marquee-row" key={`${filter}-${rowIndex}`}>
+            <div className={`stack-marquee-track ${rowIndex % 2 ? "reverse" : ""}`} style={{ "--row-speed": `${28 + rowIndex * 3}s`, "--row-delay": `${-rowIndex * 2.4}s` } as CSSProperties}>
+              {[0, 1, 2].map(copy => (
+                <div className="stack-marquee-group" key={copy} aria-hidden={copy > 0}>
+                  {row.map(item => (
+                    <motion.span className={`tech-tag tech-${item.group.toLowerCase()}`} key={item.name}
+                      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24 }}>
+                      <span className="tech-mark" style={{ "--mark-color": item.tone } as CSSProperties} aria-hidden="true">{item.mark}</span>
+                      {item.name}
+                    </motion.span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {visibleStack.length} technologies shown{filter === "All" ? "." : ` in ${filter}.`} The orbit is {paused ? "paused" : "turning"}.
+        {visibleStack.length} technologies shown{filter === "All" ? "." : ` in ${filter}.`}
       </span>
-      <ul className="sr-only" aria-label={`${filter} technologies`}>{visibleStack.map(item => <li key={item.name}>{item.name}</li>)}</ul>
 
       <div className="stack-filters" role="group" aria-label="Filter technologies">
         {stackFilters.map(item => <button type="button" key={item} aria-pressed={item === filter} onClick={() => setFilter(item)}>
@@ -239,12 +161,12 @@ export function StackCard() {
 /* ---------------------------------------------------------------- workstation */
 
 const deskTools = [
-  { name: "Claude Code", kind: "agent", icon: Sparkles, tone: "#e6a873" },
-  { name: "Codex", kind: "agent", icon: Hexagon, tone: "#8ef0c8" },
-  { name: "VS Code", kind: "editor", icon: Code2, tone: "#7fb0ff" },
-  { name: "Ghostty", kind: "shell", icon: SquareTerminal, tone: "#c3a6ff" },
-  { name: "Docker", kind: "ship", icon: Container, tone: "#7fc9ff" },
-  { name: "Git", kind: "ship", icon: GitBranch, tone: "#ff9c8a" },
+  { name: "Claude Code", brand: siClaudecode, tone: "#d97757" },
+  { name: "Codex", brand: siOpenaigym, tone: "#f4f4f5" },
+  { name: "VS Code", brand: null, tone: "#42a5f5" },
+  { name: "Ghostty", brand: siGhostty, tone: "#a9a1ff" },
+  { name: "Docker", brand: siDocker, tone: "#2496ed" },
+  { name: "Git", brand: siGit, tone: "#f03c2e" },
 ] as const;
 
 const DOCK_REACH = 74;
@@ -253,7 +175,7 @@ const DOCK_REACH = 74;
  * A dock that magnifies under the cursor. Each tile reads the shared pointer
  * position and scales by its own distance from it, so neighbours lift in sequence.
  */
-function DockTile({ label, icon: Icon, tone, pointer }: { label: string; icon: typeof Sparkles; tone: string; pointer: MotionValue<number> }) {
+function DockTile({ label, brand, tone, pointer }: { label: string; brand: SimpleIcon | null; tone: string; pointer: MotionValue<number> }) {
   const ref = useRef<HTMLLIElement>(null);
 
   const scale = useTransform(pointer, (value: number) => {
@@ -269,7 +191,13 @@ function DockTile({ label, icon: Icon, tone, pointer }: { label: string; icon: t
   return (
     <motion.li ref={ref} className="dock-tile" style={{ scale: smooth, y: rise, "--tone": tone } as unknown as CSSProperties}>
       <span className="dock-icon">
-        <Icon size={22} strokeWidth={1.5} />
+        {brand ? (
+          <svg className="dock-brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={brand.path} /></svg>
+        ) : (
+          <svg className="dock-brand-icon vscode-brand" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17.4 2.2 8 9.5 4 6.4 1.2 7.6v8.8L4 17.6l4-3.1 9.4 7.3 5.4-2.4V4.6l-5.4-2.4Zm0 4.2v11.2L10.2 12l7.2-5.6ZM4.2 9.1 7 11.3v1.4l-2.8 2.2V9.1Z" />
+          </svg>
+        )}
       </span>
       <span className="dock-label">{label}</span>
     </motion.li>
@@ -279,9 +207,10 @@ function DockTile({ label, icon: Icon, tone, pointer }: { label: string; icon: t
 export function WorkstationDock() {
   const pointer = useMotionValue(-9999);
   return (
-    <div className="workstation-dock" aria-hidden="true">
+    <div className="workstation-dock">
       <div className="dock-shelf">
         <ul
+          aria-label="Apps in my daily workstation"
           onPointerMove={event => {
             if (event.pointerType !== "mouse") return;
             const bounds = event.currentTarget.getBoundingClientRect();
@@ -289,13 +218,13 @@ export function WorkstationDock() {
           }}
           onPointerLeave={() => pointer.set(-9999)}
         >
-          {deskTools.map(tool => <DockTile key={tool.name} label={tool.name} icon={tool.icon} tone={tool.tone} pointer={pointer} />)}
+          {deskTools.map(tool => <DockTile key={tool.name} label={tool.name} brand={tool.brand} tone={tool.tone} pointer={pointer} />)}
         </ul>
         <span className="dock-plinth" />
       </div>
       <div className="desk-view">
         <span className="desk-screen"><i /></span>
-        <span className="desk-caption micro">ONE SCREEN · ONE DESK · EVERYTHING WITHIN REACH</span>
+        <span className="desk-caption micro">AGENTS · EDITOR · TERMINAL · CONTAINERS · VERSION CONTROL</span>
       </div>
     </div>
   );

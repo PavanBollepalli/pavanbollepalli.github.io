@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BadgeCheck, Check, Code2, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, ArrowUpRight, Check, Code2, ShieldCheck } from "lucide-react";
 import { profile, projects, notes } from "@/lib/content";
 import { Reveal, Tilt, Words } from "./motion";
 import { Globe, ProjectArt, StackCard, SystemSculpture, WorkstationDock } from "./diagrams";
@@ -18,10 +19,9 @@ export function Bento() {
   return <section className="bento-section framed texture" aria-label="How I work"><h2 className="sr-only">The way I engineer</h2><div className="bento-grid">
     <Reveal className="bento-wide"><Link href="/about" className="bento-card how-card"><span className="eyebrow blue-label">HOW I ENGINEER</span><h3>Correct. Reviewable. Fast.<br/>In that order.</h3><SystemSculpture compact/><span className="circle-arrow"><ArrowRight size={19}/></span><span className="bento-bottom micro">GOOD SYSTEMS START WITH GOOD BOUNDARIES</span></Link></Reveal>
     <Reveal className="bento-stack" delay={0.06}><StackCard/></Reveal>
-    <Reveal delay={0.04}><div className="bento-card trust-card"><span className="eyebrow">WHAT YOU GET</span><h3>Not an AI wrapper.<br/>An engineered system.</h3><div className="trust-art" aria-hidden="true"><div className="trust-orbit orbit-one"/><div className="trust-orbit orbit-two"/><div className="trust-center"><ShieldCheck size={48} strokeWidth={1}/></div><span className="trust-chip top"><Code2 size={14}/> Typed APIs</span><span className="trust-chip bottom"><Check size={14}/> Evidence gates</span></div><span className="bento-bottom micro">RETRIEVAL · RELIABILITY · PERFORMANCE</span></div></Reveal>
+    <Reveal delay={0.04}><div className="bento-card trust-card"><span className="eyebrow">WHAT YOU GET</span><h3>Not an AI wrapper.<br/>An engineered system.</h3><div className="trust-art" aria-hidden="true"><div className="trust-orbit orbit-one"/><div className="trust-orbit orbit-two"/><div className="trust-center"><ShieldCheck size={48} strokeWidth={1}/></div><span className="trust-chip top"><Code2 size={14}/> Typed APIs</span><span className="trust-chip bottom"><Check size={14}/> Evidence gates</span></div><span className="bento-bottom micro">CSE AI &amp; ML · CLOUD CERTIFIED · ACM WINNER</span></div></Reveal>
     <Reveal delay={0.08}><div className="bento-card location-card"><span className="eyebrow">REMOTE, WORLDWIDE</span><h3>Based in India.<br/>Built for everywhere.</h3><Globe/><span className="bento-bottom micro"><span className="signal"/> <LocalTime/></span></div></Reveal>
-    <Reveal delay={0.12}><div className="bento-card credentials-card"><span className="eyebrow">THE FOUNDATIONS</span><h3>Curiosity, backed<br/>by the fundamentals.</h3><div className="credential-badges"><span><BadgeCheck/><strong>AWS</strong><small>Cloud certified</small></span><span><BadgeCheck/><strong>Google Cloud</strong><small>Cloud certified</small></span></div><span className="bento-bottom micro">CSE (AI &amp; ML) ’26 · ACM CONTEST WINNER</span></div></Reveal>
-    <Reveal className="bento-workstation" delay={0.06}><div className="bento-card workstation-card"><div className="workstation-copy"><span className="eyebrow">WORKSTATION</span><h3>Everything on my desk<br/>and dock.</h3><p className="workstation-note">Two agents, one editor, one terminal, and the containers they ship into. Nothing on this dock is decoration — it is the daily route from an idea to a running system.</p></div><WorkstationDock/><span className="bento-bottom micro">AGENTS · EDITOR · SHELL · CONTAINERS · VERSION CONTROL</span></div></Reveal>
+    <Reveal className="bento-workstation" delay={0.06}><div className="bento-card workstation-card"><div className="workstation-copy"><span className="eyebrow">WORKSTATION</span><h3>Everything on my desk<br/>and dock.</h3><p className="workstation-note">The tools I use to build, test, and ship.</p></div><WorkstationDock/></div></Reveal>
   </div></section>;
 }
 
@@ -40,6 +40,14 @@ export function AboutTeaser() {
 
 export function NoteCards() {
   return <div className="notes-grid texture">{notes.map((note,index)=><Reveal key={note.slug} delay={index*0.07}><Link href={`/notes/${note.slug}`} className={`note-card note-${note.theme}`}><div className="note-art" aria-hidden="true"><span className="note-art-index">FIELD NOTES / {note.number}</span>{note.number==="01"?<div className="note-bars"><i/><i/><i/><i/><span>9.6s → 0.48s</span></div>:note.number==="02"?<div className="note-shield"><ShieldCheck size={94} strokeWidth={0.8}/><span>EVIDENCE &gt; CONFIDENCE</span></div>:<div className="note-code"><span>CREATE INDEX</span><strong>better_answers</strong><span>ON the_fundamentals;</span></div>}</div><div className="note-copy"><span className="eyebrow">{note.category}</span><h3>{note.title}</h3><p>{note.subtitle}</p><span className="note-read">Read the note <ArrowUpRight size={16}/></span></div></Link></Reveal>)}</div>;
+}
+
+export function SiteExplore() {
+  return <section className="site-explore framed" id="more"><SectionHeading eyebrow="MY SITE" title="Explore, experiment" accent="& say hello." centered/><div className="site-explore-grid texture">
+    <Link href="/uses" className="site-explore-card site-tools-card"><span className="eyebrow">WORKSTATION</span><h3>Everything on my desk and dock</h3><div className="site-tools-dock"><WorkstationDock/></div><small>HARDWARE · EDITOR · TERMINAL · TOOLS</small><span className="site-card-arrow"><ArrowRight size={18}/></span></Link>
+    <Link href="/about#experience" className="site-explore-card site-about-card"><span className="eyebrow">BEHIND THE CODE</span><h3>Journey, skills &amp; experience</h3><div className="site-id-preview"><Image src="/assets/avatar.jpg" alt="Pavan Bollepalli" width={220} height={260} sizes="120px"/></div><span className="site-card-arrow"><ArrowRight size={18}/></span></Link>
+    <Link href="/guestbook" className="site-explore-card site-guestbook-card"><span className="eyebrow">GUESTBOOK</span><h3>Sign the wall, leave a note</h3><div className="site-note-stack" aria-hidden="true"><span>Good work, keep building.</span><span>Thoughtful details matter.</span><span>Your note here →</span></div><span className="site-card-arrow"><ArrowRight size={18}/></span></Link>
+  </div></section>;
 }
 
 export function Contact() {
