@@ -1,27 +1,21 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BookOpen, Code2, Github, Globe2, Laptop, Linkedin, Mail, MapPin, ShieldCheck, Sparkles, Wrench } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen, Github, Globe2, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 import { PageHeading, Contact } from "@/components/sections";
 import { BlogExplorer } from "@/components/blog-explorer";
 import { Reveal } from "@/components/motion";
 import { profile, projects } from "@/lib/content";
+import { StackCard, WorkstationDock } from "@/components/diagrams";
 
 export function BlogIndex() {
   return <><PageHeading eyebrow="FROM THE BACKEND" title="Thoughts &" accent="field notes." description="Notes on the systems I build, the decisions behind them, and what I learn along the way."/><BlogExplorer/><Contact/></>;
 }
 
 export function GuestbookPage() {
-  return <><PageHeading eyebrow="THE GUESTBOOK" title="Leave a little" accent="signal." description="A portfolio is better when it starts a conversation. Tell me what you noticed, what you are building, or what I should explore next."/><section className="guestbook-panel framed texture"><Reveal className="guestbook-card"><span className="guestbook-icon"><BookOpen size={25}/></span><span className="eyebrow">A NOTE TO THE BUILDER</span><h2>The wall is open.</h2><p>I’m collecting thoughtful notes from people who stop by. Send yours directly and I’ll add it here with your permission.</p><a className="button button-primary" href={`mailto:${profile.email}?subject=${encodeURIComponent("A note for your guestbook")}`}>Write a note <ArrowUpRight size={17}/></a></Reveal></section><Contact/></>;
+  return <><PageHeading eyebrow="THE GUESTBOOK" title="Leave a little" accent="signal." description="A portfolio is better when it starts a conversation. Tell me what you noticed, what you are building, or what I should explore next."/><section className="guestbook-panel framed texture"><Reveal className="guestbook-card"><span className="guestbook-icon"><BookOpen size={25}/></span><span className="eyebrow">A NOTE TO THE BUILDER</span><h2>The wall is open.</h2><p>Have a thought about the work or an idea to share? Email me a note, and I'll add it to the guestbook with your permission.</p><a className="button button-primary" href={`mailto:${profile.email}?subject=${encodeURIComponent("A note for your guestbook")}`}>Write a note <ArrowUpRight size={17}/></a></Reveal></section><Contact/></>;
 }
 
-const environments = [
-  { icon: Laptop, title: "Hardware", label: "Primary workstation", note: "A portable setup for coding, testing, and review" },
-  { icon: Code2, title: "Build", label: "Claude Code · Codex · VS Code", note: "AI-assisted development with reviewable changes" },
-  { icon: Wrench, title: "Daily tools", label: "Ghostty · Docker · Git", note: "Terminal, containers, and version control" },
-  { icon: ShieldCheck, title: "Engineering", label: "Python · TypeScript · PostgreSQL", note: "Typed services, data systems, and retrieval" },
-];
-
 export function UsesPage() {
-  return <><PageHeading eyebrow="TOOLS, SOFTWARE & GEAR" title="A setup for" accent="shipping good work." description="The hardware and software I use to research, build, review, and ship backend and AI products."/><section className="uses-grid framed texture" aria-label="Tools and gear">{environments.map((item,index)=><Reveal className="uses-card" delay={index*.06} key={item.title}><span className="uses-icon"><item.icon size={21}/></span><span className="eyebrow">0{index+1} / {item.title}</span><h2>{item.label}</h2><p>{item.note}</p></Reveal>)}</section><Contact/></>;
+  return <><PageHeading eyebrow="TOOLS, SOFTWARE & GEAR" title="The desk behind" accent="the work." description="A practical setup for building, testing, reviewing, and shipping backend and AI products."/><section className="uses-showcase framed texture" aria-label="Workstation and daily tools"><Reveal className="uses-desk-card"><span className="eyebrow">WORKSTATION</span><h2>Everything on my desk and dock</h2><p>The apps I reach for to think, build, and ship.</p><WorkstationDock/><span className="uses-desk-caption micro">AI PAIRING · EDITOR · TERMINAL · CONTAINERS · VERSION CONTROL</span></Reveal><Reveal className="uses-stack-card" delay={0.08}><StackCard/></Reveal></section><Contact/></>;
 }
 
 const milestones = [
@@ -47,7 +41,7 @@ export function LinksPage() {
 }
 
 export function ContactPage() {
-  return <><PageHeading eyebrow="OPEN TO GOOD PROBLEMS" title="Let’s build" accent="something useful." description="I’m open to backend and AI engineering roles, and thoughtful freelance projects. Tell me what you’re working on."/><section className="contact-page-panel framed texture"><Reveal><span className="contact-page-coordinate"><MapPin size={14}/> {profile.location}</span><h2>Start a conversation.</h2><p>Share the problem, the team, or the idea you have in mind. I’ll get back to you by email.</p><a className="button button-primary" href={`mailto:${profile.email}?subject=${encodeURIComponent("Let’s build something useful")}`}>Email Pavan <ArrowUpRight size={17}/></a><div className="contact-page-links"><a href={profile.github} target="_blank" rel="noreferrer"><Github size={17}/> GitHub</a><a href={profile.linkedin} target="_blank" rel="noreferrer"><Linkedin size={17}/> LinkedIn</a><a href={profile.resume} target="_blank" rel="noreferrer"><ArrowUpRight size={17}/> Résumé</a><a href={`mailto:${profile.email}`}><Mail size={17}/> {profile.email}</a></div><span className="contact-page-orbit" aria-hidden="true"><Globe2/><Sparkles/></span></Reveal></section><Contact/></>;
+  return <><PageHeading eyebrow="OPEN TO OPPORTUNITIES" title="Let's build" accent="something useful." description="I'm available for backend, AI, and ML engineering roles. I'm open to remote work, hybrid roles, or relocation. Tell me what your team needs help solving."/><section className="contact-page-panel framed texture"><Reveal><span className="contact-page-coordinate"><MapPin size={14}/> {profile.location}</span><h2>Start a conversation.</h2><p>Share the role, the team, or a problem you need solved. I'll reply by email.</p><a className="button button-primary" href={`mailto:${profile.email}?subject=${encodeURIComponent("Let's build something useful")}`}>Email Pavan <ArrowUpRight size={17}/></a><div className="contact-page-links"><a href={profile.github} target="_blank" rel="noreferrer"><Github size={17}/> GitHub</a><a href={profile.linkedin} target="_blank" rel="noreferrer"><Linkedin size={17}/> LinkedIn</a><a href={profile.resume} target="_blank" rel="noreferrer"><ArrowUpRight size={17}/> Resume</a><a href={`mailto:${profile.email}`}><Mail size={17}/> {profile.email}</a></div><span className="contact-page-orbit" aria-hidden="true"><Globe2/><Sparkles/></span></Reveal></section><Contact/></>;
 }
 
 export function LegalPage({ kind }: { kind: "privacy" | "terms" }) {

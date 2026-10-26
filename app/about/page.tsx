@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { pageMetadata } from "@/lib/seo";
-import { AboutTeaser, Bento, Contact, Experience, PageHeading } from "@/components/sections";
+import { AboutTeaser, Bento, Contact, Credentials, Experience, PageHeading } from "@/components/sections";
 import { GitHubSection, GitHubSkeleton } from "@/components/github";
 
 export const revalidate = 21600;
-export const metadata = pageMetadata("About & experience", "The person behind the systems. Pavan's backend and AI engineering journey, Wikimedia experience, skills and real GitHub activity.", "/about");
+export const metadata = pageMetadata("About & experience", "Pavan Bollepalli's engineering background, open-source work, projects, education, and certifications.", "/about");
 export default function AboutPage() {
-  return <div className="about-page"><PageHeading eyebrow="BEHIND THE CODE" title="A builder at heart." accent="An engineer by choice." description="I’m Pavan Bollepalli. A 2026 Computer Science (AI & ML) graduate, open-source contributor, and someone who thinks the best AI products start with solid backend engineering."/><AboutTeaser/><Experience/><Bento/><Suspense fallback={<GitHubSkeleton/>}><GitHubSection full/></Suspense><Contact/></div>;
+  return <div className="about-page"><PageHeading eyebrow="ABOUT PAVAN" title="I build the systems" accent="behind useful AI." description="I'm a 2026 Computer Science graduate focused on backend engineering and applied AI. I make the services and data pipelines that help AI products find relevant information, give answers people can verify, and work reliably."/><AboutTeaser/><Experience/><Credentials/><Bento/><Suspense fallback={<GitHubSkeleton/>}><GitHubSection full/></Suspense><Contact/></div>;
 }

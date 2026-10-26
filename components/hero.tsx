@@ -23,9 +23,9 @@ function HeroLine({ children, delay = 0 }: { children: ReactNode; delay?: number
 }
 
 const STRIP = [
-  { href: "/about#experience", dot: "dot-blue", label: "THE EXPERIENCE", title: "Built in the open.", note: "Wikimedia · Open-source contributor" },
-  { href: "/work/flash-resume", dot: "dot-pink", label: "THE LATEST", title: "Flash Resume", note: "AI proposes. Evidence decides." },
-  { href: "/notes", dot: "dot-violet", label: "THE THINKING", title: "Notes from the backend", note: "Decisions, trade-offs & the details" },
+  { href: "/about#experience", dot: "dot-blue", label: "OPEN SOURCE", title: "Wikimedia Foundation", note: "Engineering contributions, reviewed and merged" },
+  { href: "/work/flash-resume", dot: "dot-pink", label: "FEATURED PROJECT", title: "Flash Resume", note: "AI suggestions checked against résumé evidence" },
+  { href: "/notes", dot: "dot-violet", label: "ENGINEERING NOTES", title: "How the systems work", note: "Clear explanations, with the technical details" },
 ] as const;
 
 /** The cards that close the hero, staged as an accelerating staircase. */
@@ -66,7 +66,7 @@ function HeroStrip() {
           THE NEXT CHAPTER
         </span>
         <span className="strip-contact">
-          Let’s build something
+          Available now
           <span>
             <ArrowRight size={20} />
           </span>
@@ -98,8 +98,8 @@ export function Hero() {
             </span>
           </Reveal>
           <h1 className="hero-title">
-            <HeroLine delay={0.08}>Intelligent systems.</HeroLine>
-            <HeroLine delay={0.2}>Engineered to <em className="gradient-blue">last.</em></HeroLine>
+            <HeroLine delay={0.08}>Better backends.</HeroLine>
+            <HeroLine delay={0.2}><em className="gradient-blue">More dependable AI.</em></HeroLine>
           </h1>
           <motion.p
             className="hero-description"
@@ -108,7 +108,7 @@ export function Hero() {
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.8, delay: 0.5, ease: EASE }}
           >
-            I build the part you don’t see: the APIs, retrieval pipelines, and foundations that make AI actually work.
+            I build the services and data systems behind AI products: helping them find useful information, give more reliable answers, and work from the first click to the final result.
           </motion.p>
           <motion.div
             className="hero-actions"
@@ -119,7 +119,7 @@ export function Hero() {
           >
             <Magnetic strength={0.22}>
               <Link href="/work" className="button button-primary">
-                Explore my work <ArrowUpRight size={18} />
+                See selected work <ArrowUpRight size={18} />
               </Link>
             </Magnetic>
             <a href={profile.resume} className="text-link" target="_blank" rel="noreferrer">
