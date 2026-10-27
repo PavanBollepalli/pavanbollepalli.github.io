@@ -1,2 +1,5 @@
-import { redirect } from "next/navigation";
-export default function ProjectsPage() { redirect("/work"); }
+import { RedirectTo } from "@/components/redirect";
+
+export default function ProjectsPage() {
+  return <RedirectTo href="/work" label="Projects are listed under Work now." />;
+}

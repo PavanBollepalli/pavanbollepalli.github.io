@@ -5,6 +5,8 @@ import { join } from "node:path";
 export const alt = "Pavan Bollepalli — Backend & AI Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+// Rendered once at build time into a static PNG; see the note in app/robots.ts.
+export const dynamic = "force-static";
 const logoData = `data:image/svg+xml;base64,${readFileSync(join(process.cwd(), "public/assets/pb-monogram.svg")).toString("base64")}`;
 
 export default function OpenGraphImage() {

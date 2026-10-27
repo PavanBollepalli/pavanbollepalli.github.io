@@ -1,2 +1,5 @@
-import { redirect } from "next/navigation";
-export default function BookACallPage() { redirect("/contact"); }
+import { RedirectTo } from "@/components/redirect";
+
+export default function BookACallPage() {
+  return <RedirectTo href="/contact" label="Booking a call starts on the contact page." />;
+}

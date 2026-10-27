@@ -1,6 +1,9 @@
 import { notes } from "@/lib/content";
 import { siteUrl } from "@/lib/seo";
 
+// Route handlers are dynamic by default; a static export needs this one prerendered.
+export const dynamic = "force-static";
+
 const escape = (text: string) => text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&apos;");
 export function GET() {
   const items = notes.map(note => `<item><title>${escape(note.title)}</title><link>${siteUrl}/blog/${note.slug}</link><guid>${siteUrl}/blog/${note.slug}</guid><description>${escape(note.subtitle)}</description></item>`).join("");

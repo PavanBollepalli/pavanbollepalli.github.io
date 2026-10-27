@@ -684,3 +684,7 @@ img { display: block; max-width: 100%; }
 .credential-card p{max-width:32ch;color:var(--muted);line-height:1.6}
 @media(max-width:700px){.credentials-grid{grid-template-columns:1fr}.credential-card{min-height:0}}
 @media(max-width:640px){.brand{width:34px;height:36px}.brand img{width:34px;height:17px}}
+
+/* Alias routes: a static export cannot redirect, so these pages forward themselves. */
+.alias-page { min-height: 60dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 60px 24px; }
+.alias-page p { color: var(--muted); font-size: 15px; }
