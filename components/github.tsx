@@ -1,0 +1,26 @@
+import { ArrowUpRight, GitCommitHorizontal, Github, Pin, Star } from "lucide-react";
+import { getGitHubData } from "@/lib/github";
+import { profile } from "@/lib/content";
+import { ContributionGraph, RelativeTime } from "./contribution-graph";
+import { Reveal } from "./motion";
+
+function relativeLabel(date:string,now:number){
+  const seconds=Math.round((new Date(date).getTime()-now)/1000);const format=new Intl.RelativeTimeFormat("en",{numeric:"auto"});
+  if(Math.abs(seconds)<60)return format.format(seconds,"second");if(Math.abs(seconds)<3600)return format.format(Math.round(seconds/60),"minute");if(Math.abs(seconds)<86400)return format.format(Math.round(seconds/3600),"hour");return format.format(Math.round(seconds/86400),"day");
+}
+
+export async function GitHubSection({full=false}:{full?:boolean}) {
+  const data=await getGitHubData();
+  const now=Date.now();
+  return <section className={`github-section framed ${full?"github-full":""}`} id="github"><Reveal className="github-header"><div><span className="eyebrow">THE WORK, IN THE OPEN</span><h2>A habit of <em className="gradient-blue">building.</em></h2><p>The last 12 months of contributions, directly from GitHub.</p></div><a href={profile.github} target="_blank" rel="noreferrer" className="github-profile"><Github size={17}/>@{data.username}<ArrowUpRight size={13}/></a></Reveal>
+    {data.contributions?<ContributionGraph data={data.contributions}/>:<p className="github-unavailable">GitHub data unavailable</p>}
+    <div className="github-details"><div><h3>Recent public pushes</h3>{data.recentPushes===null?<p className="github-unavailable">GitHub data unavailable</p>:data.recentPushes.length===0?<p className="github-unavailable">No recent public pushes returned by GitHub.</p>:<ol className="push-list">{data.recentPushes.map(push=>{
+      const exact=push.commitSource==="event"||push.commitSource==="head";
+      const commit=push.commits.at(-1);
+      const message=exact&&commit?.message?commit.message.split("\n")[0]:null;
+      return <li key={push.id}><GitCommitHorizontal size={16} className="push-icon"/><div className="push-content"><div className="push-top"><a href={push.repositoryUrl} target="_blank" rel="noreferrer">{push.repository.replace(`${data.username}/`,"")}</a><RelativeTime date={push.createdAt} initial={relativeLabel(push.createdAt,now)}/></div><p className="push-message">{message?<a href={commit!.htmlUrl} target="_blank" rel="noreferrer">{message}</a>:"Commit message unavailable from GitHub"}</p>{full&&push.branch&&<span className="micro">{push.branch}</span>}</div></li>;
+    })}</ol>}</div><div><h3>Languages across public repos</h3>{data.languages===null?<p className="github-unavailable">GitHub data unavailable</p>:data.languages.items.length===0?<p className="github-unavailable">No language data returned by GitHub.</p>:<><div className="language-bar" aria-hidden="true">{data.languages.items.map((language,index)=><span key={language.name} style={{width:`${language.percentage}%`,background:["var(--blue)","var(--violet)","var(--pink)","var(--mint)","var(--muted)"][index%5]}}/>)}</div><ul className="language-list">{data.languages.items.map((language,index)=><li key={language.name}><i aria-hidden="true" style={{background:["var(--blue)","var(--violet)","var(--pink)","var(--mint)","var(--muted)"][index%5]}}/>{language.name}<span>{language.percentage.toLocaleString("en",{maximumFractionDigits:1})}%</span></li>)}</ul><p className="language-note">{data.languages.basis==="bytes"?"By code size":"By primary language"} across {data.languages.repositoryCount.toLocaleString("en")} owned public repositories, including forks.</p></>}{full&&<><h3><Pin size={12}/> Pinned on GitHub</h3>{data.pinnedRepositories===null?<p className="github-unavailable">GitHub data unavailable</p>:data.pinnedRepositories.length===0?<p className="github-unavailable">No repositories pinned on GitHub.</p>:<div className="pin-list">{data.pinnedRepositories.map(repo=><a href={repo.htmlUrl} key={repo.fullName} target="_blank" rel="noreferrer"><Pin size={12}/>{repo.name}<span className="repo-stars"><Star size={11}/>{repo.stars.toLocaleString("en")}</span></a>)}</div>}</>}</div></div>
+    <div className="featured-repos">{Object.entries(data.featuredRepositories).map(([name,repo])=><a className="featured-repo" key={name} href={repo?.htmlUrl??`${profile.github}/${name}`} target="_blank" rel="noreferrer"><div className="featured-repo-top"><h3>{repo?.name??name}</h3><ArrowUpRight size={14}/></div>{repo?.description&&<p>{repo.description}</p>}<span className="repo-stars">{repo?<><Star size={12}/>{repo.stars.toLocaleString("en")} {repo.stars===1?"star":"stars"}</>:"GitHub data unavailable"}</span></a>)}</div><p className="github-cache-note">Fetched on the server · Revalidated every 6 hours · Public push feed.{full?" GitHub's public event feed has a limited retention window; missing push messages are left unavailable, not inferred from nearby commits.":""}</p></section>;
+}
+
+export function GitHubSkeleton(){return <section className="github-section framed" aria-label="Loading GitHub activity" aria-busy="true"><span className="eyebrow">GITHUB ACTIVITY</span><div className="skeleton-line"/><div className="skeleton-block"/><div className="skeleton-line"/><span className="sr-only" role="status">Loading real GitHub data…</span></section>;}
