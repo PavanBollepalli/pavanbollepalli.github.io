@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { MotionProvider, ScrollProgress } from "@/components/motion";
 import { Footer, Navigation } from "@/components/shell";
 import { profile } from "@/lib/content";
-import { siteDescription, siteUrl } from "@/lib/seo";
+import { ogImage, siteDescription, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   authors: [{ name: profile.name, url: siteUrl }],
   creator: profile.name,
   robots: { index: true, follow: true },
+  // Applies to routes that set no metadata of their own; every page built through
+  // `pageMetadata` replaces this with its own, matching card.
+  openGraph: { title: "Pavan Bollepalli — Backend & AI Engineer", description: siteDescription, url: siteUrl, type: "website", siteName: "Pavan Bollepalli", locale: "en_IN", images: [ogImage] },
+  twitter: { card: "summary_large_image", title: "Pavan Bollepalli — Backend & AI Engineer", description: siteDescription, images: [ogImage.url] },
 };
 
 const structuredData = {

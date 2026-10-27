@@ -1,12 +1,20 @@
 import { ImageResponse } from "next/og";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { ogImage } from "./seo";
 
-export const alt = "Pavan Bollepalli — Backend & AI Engineer";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
-// Rendered once at build time into a static PNG; see the note in app/robots.ts.
-export const dynamic = "force-static";
+/**
+ * The artwork for the social preview card, rendered once at build time.
+ *
+ * It lives here rather than in the `app/opengraph-image.tsx` metadata convention
+ * because that convention exports an extensionless file, which hosts that type by
+ * extension serve as `application/octet-stream`. `app/og.png/route.ts` renders
+ * this into `out/og.png` instead; see the note there. The dimensions come from
+ * `ogImage` so the card and the tags describing it cannot drift apart.
+ */
+export const alt = ogImage.alt;
+export const size = { width: ogImage.width, height: ogImage.height };
+
 const logoData = `data:image/svg+xml;base64,${readFileSync(join(process.cwd(), "public/assets/pb-monogram.svg")).toString("base64")}`;
 
 export default function OpenGraphImage() {

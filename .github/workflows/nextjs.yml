@@ -74,6 +74,22 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
           NEXT_TELEMETRY_DISABLED: "1"
+          # Optional. The build reads GitHub twice over: the contribution calendar
+          # and the pinned repos come from public pages on github.com, while the
+          # push feed, languages and featured repos come from api.github.com.
+          # Unauthenticated API calls share a 60-per-hour ceiling per IP, and a
+          # build spends roughly fifteen of them — so a busy hour on a shared
+          # runner IP degrades those three sections to "GitHub data unavailable",
+          # which is exactly the symptom this deploy was fixed for.
+          #
+          # Set a repository secret named PORTFOLIO_GITHUB_TOKEN to a classic
+          # personal access token (no scopes are needed; it only reads public
+          # data) and the ceiling becomes 5,000 per hour. Deliberately NOT
+          # `secrets.GITHUB_TOKEN`: that one is always present, and its presence
+          # switches the contribution calendar to a GraphQL query an app
+          # installation token is not permitted to make. Left unset, the build
+          # takes the same path it takes today.
+          GITHUB_TOKEN: ${{ secrets.PORTFOLIO_GITHUB_TOKEN }}
         run: npx --no-install next build
 
       - name: Upload artifact
