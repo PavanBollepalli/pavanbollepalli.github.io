@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -18,8 +18,9 @@ import {
   SquareTerminal,
   Zap,
 } from "lucide-react";
-import { motion, useMotionValue, useSpring, useTransform, type MotionValue } from "motion/react";
+import { motion, useInView, useMotionValue, useSpring, useTransform, type MotionValue } from "motion/react";
 import { siClaude, siDocker, siGit, siGhostty, type SimpleIcon } from "simple-icons";
+import { useReducedMotionPreference } from "./motion";
 
 export function SystemSculpture({ compact = false }: { compact?: boolean }) {
   return <div className={`system-sculpture ${compact ? "compact" : ""}`} aria-hidden="true">
@@ -109,6 +110,8 @@ const stackFilters = ["All", "Frontend", "Backend", "AI", "Tools"] as const;
 
 export function StackCard() {
   const [filter, setFilter] = useState<(typeof stackFilters)[number]>("All");
+  const pillScope = useId();
+  const soft = useReducedMotionPreference();
   const visibleStack = stack.filter(item => filter === "All" || item.group === filter);
   const rows = Array.from({ length: 4 }, (_, row) => visibleStack.filter((_, index) => index % 4 === row));
 
@@ -121,15 +124,15 @@ export function StackCard() {
         </div>
       </div>
 
-      <div className={`stack-chip-grid ${filter !== "All" ? "is-filtered" : ""}`} aria-label={`${filter} technologies`}>
-        {filter !== "All" ? visibleStack.map(item => (
+      <div className={`stack-chip-grid ${filter !== "All" || soft ? "is-filtered" : ""} ${soft && filter === "All" ? "is-static" : ""}`} aria-label={`${filter} technologies`} tabIndex={soft && filter === "All" ? 0 : undefined}>
+        {filter !== "All" || soft ? visibleStack.map(item => (
           <span className={`tech-tag tech-${item.group.toLowerCase()}`} key={item.name}>
             <span className="tech-mark" style={{ "--mark-color": item.tone } as CSSProperties} aria-hidden="true">{item.mark}</span>
             {item.name}
           </span>
         )) : rows.map((row, rowIndex) => row.length > 0 && (
           <div className="stack-marquee-row" key={`${filter}-${rowIndex}`}>
-            <div className={`stack-marquee-track ${rowIndex % 2 ? "reverse" : ""}`} style={{ "--row-speed": `${28 + rowIndex * 3}s`, "--row-delay": `${-rowIndex * 2.4}s` } as CSSProperties}>
+            <div className="stack-marquee-track" style={{ "--row-speed": `${28 + rowIndex * 3}s`, "--row-delay": `${-rowIndex * 2.4}s` } as CSSProperties}>
               {[0, 1, 2].map(copy => (
                 <div className="stack-marquee-group" key={copy} aria-hidden={copy > 0}>
                   {row.map(item => (
@@ -152,6 +155,7 @@ export function StackCard() {
 
       <div className="stack-filters" role="group" aria-label="Filter technologies">
         {stackFilters.map(item => <button type="button" key={item} aria-pressed={item === filter} onClick={() => setFilter(item)}>
+          {item === filter && <motion.i className="stack-filter-pill" layoutId={`stack-filter-pill-${pillScope}`} transition={{ type: "spring", stiffness: 420, damping: 34 }} aria-hidden="true" />}
           <span aria-hidden="true" />{item}
         </button>)}
       </div>
@@ -237,18 +241,84 @@ export function Globe() {
   return <div className="globe-art" aria-hidden="true"><svg viewBox="0 0 400 225"><defs><pattern id="dots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="currentColor"/></pattern><radialGradient id="globe-glow"><stop stopColor="#3767ff" stopOpacity=".2"/><stop offset="1" stopColor="#3767ff" stopOpacity="0"/></radialGradient></defs><ellipse cx="242" cy="139" rx="150" ry="100" fill="url(#globe-glow)"/><g fill="url(#dots)" opacity=".65"><path d="M30 53 72 37 103 42 137 60 122 81 94 92 86 116 65 101 47 77Z M94 115 130 130 143 153 124 184 111 208 97 177 85 149Z M172 59 208 44 219 57 250 38 281 45 303 64 348 57 371 85 341 109 313 101 294 124 264 120 248 146 232 121 222 85 203 78 185 91Z M189 91 226 94 236 128 214 176 195 159 180 123Z M302 166 330 151 358 166 364 186 332 196 307 184Z"/></g><circle cx="250" cy="126" r="5" fill="#6c91ff"/><circle className="location-ring" cx="250" cy="126" r="12" fill="none" stroke="#6c91ff"/><path d="M261 126 h53" stroke="#6c91ff" opacity=".5"/><text x="267" y="117" fill="#c9d3f8" fontSize="9" fontFamily="monospace" letterSpacing="1">GUNTUR, IN</text></svg></div>;
 }
 
+/**
+ * The mini terminal with a typed line. Typing loops through three
+ * "skill" lines after the static class block. Reduced-motion visitors
+ * see the finished state immediately — no typing, no cursor blink.
+ */
 export function MiniTerminal() {
-  return <div className="mini-terminal" aria-hidden="true"><header><i/><i/><i/><span>pavan / engineering.py</span></header><div><p><span className="syntax-purple">class</span> <span className="syntax-blue">Engineer</span>:</p><p>&nbsp; priorities = [</p><p>&nbsp;&nbsp; <span className="syntax-green">"correctness"</span>,</p><p>&nbsp;&nbsp; <span className="syntax-green">"clarity"</span>,</p><p>&nbsp;&nbsp; <span className="syntax-green">"performance"</span></p><p>&nbsp; ]</p><p className="terminal-comment"># in that order.</p></div></div>;
+  const soft = useReducedMotionPreference();
+  const typed = [
+    'latency = 9.6  →  0.48s',
+    'evidence_gate = True',
+    'deploy(status="verified")',
+  ];
+  const [text, setText] = useState(soft ? typed[0] : "");
+  const [done, setDone] = useState(soft);
+
+  useEffect(() => {
+    if (soft) return;
+    let lineIndex = 0;
+    let charIndex = 0;
+    let timer = 0;
+    const step = () => {
+      const target = typed[lineIndex];
+      if (charIndex <= target.length) {
+        setText(target.slice(0, charIndex));
+        if (charIndex === target.length) {
+          setDone(true);
+          timer = window.setTimeout(() => {
+            charIndex = 0;
+            lineIndex = (lineIndex + 1) % typed.length;
+            setDone(false);
+            step();
+          }, 2100);
+          return;
+        }
+        charIndex += 1;
+        timer = window.setTimeout(step, 34);
+        return;
+      }
+      step();
+    };
+    timer = window.setTimeout(step, 650);
+    return () => window.clearTimeout(timer);
+  }, [soft]);
+
+  return (
+    <div className="mini-terminal" aria-hidden="true">
+      <header><i/><i/><i/><span>pavan / engineering.py</span></header>
+      <div>
+        <p><span className="syntax-purple">class</span> <span className="syntax-blue">Engineer</span>:</p>
+        <p>&nbsp; priorities = [</p>
+        <p>&nbsp;&nbsp; <span className="syntax-green">"correctness"</span>,</p>
+        <p>&nbsp;&nbsp; <span className="syntax-green">"clarity"</span>,</p>
+        <p>&nbsp;&nbsp; <span className="syntax-green">"performance"</span></p>
+        <p>&nbsp; ]</p>
+        <p className="terminal-typed"><span className="syntax-blue">&gt;</span> {text}{soft ? "" : <span className={`terminal-cursor ${done ? "is-done" : ""}`}>▋</span>}</p>
+        <p className="terminal-comment"># in that order.</p>
+      </div>
+    </div>
+  );
 }
 
 export function ProjectArt({ kind }: { kind: string }) {
+  const soft = useReducedMotionPreference();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.25 });
   const shot = kind === "skillvector"
     ? { src: "/assets/skill-vector-kyzv-vercel-app.png", alt: "Live SkillVector career intelligence app" }
     : kind === "flash-resume"
       ? { src: "/assets/flash-resume-repo.png", alt: "Flash Resume source repository and CLI documentation" }
       : { src: "/assets/code-atlas-xi-vercel-app.png", alt: "Live CodeAtlas repository intelligence app" };
-  return <div className={`project-live-shot project-live-shot-${kind}`} aria-hidden="true">
+  return <div ref={ref} className={`project-live-shot project-live-shot-${kind}`} aria-hidden="true">
     <Image src={shot.src} alt={shot.alt} fill sizes="(max-width: 800px) 95vw, 55vw" priority={kind === "skillvector"} />
+    <motion.span
+      className="project-shot-veil"
+      initial={false}
+      animate={inView || soft ? { scaleY: 0 } : { scaleY: 1 }}
+      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+    />
     <span className="project-shot-label">{kind === "flash-resume" ? "SOURCE REPOSITORY / CLI" : "LIVE PROJECT / PRODUCT VIEW"}</span>
   </div>;
 }

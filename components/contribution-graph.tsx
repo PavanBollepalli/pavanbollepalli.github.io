@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { motion, useInView } from "motion/react";
+import { EASE } from "./motion";
 import type { GitHubContributions, GitHubContributionDay } from "@/lib/github-core";
 
 const levels = { NONE: 0, FIRST_QUARTILE: 1, SECOND_QUARTILE: 2, THIRD_QUARTILE: 3, FOURTH_QUARTILE: 4 };
@@ -25,6 +27,7 @@ export function RelativeTime({ date, initial }: {date:string;initial:string}) {
 
 export function ContributionGraph({ data }: {data:GitHubContributions}) {
   const ref=useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
   const [activeDate,setActiveDate]=useState<string>();
   const activeDay=data.days.find(day=>day.date===activeDate);
   const startDay=data.days[0] ? new Date(`${data.days[0].date}T00:00:00Z`).getUTCDay() : 0;
@@ -41,9 +44,9 @@ export function ContributionGraph({ data }: {data:GitHubContributions}) {
   return <div className="contribution-card"><div className="contribution-summary"><strong>{data.total.toLocaleString("en")} contributions in the last 12 months</strong><span className="eyebrow">COMMIT BY COMMIT</span></div>{!data.days.length?<p className="github-unavailable">No contribution dates returned by GitHub.</p>:<Tooltip.Provider delayDuration={100}><div className="contribution-scroll" tabIndex={0} aria-label="12-month contribution calendar. Scroll horizontally on small screens."><div className="contribution-months" style={{gridTemplateColumns:template}} aria-hidden="true">{months.map((month,i)=><span key={i}>{month}</span>)}</div><div ref={ref} className="contribution-grid" style={{gridTemplateColumns:template}} role="group" aria-label={`${data.total} contributions from ${data.from.slice(0,10)} to ${data.to.slice(0,10)}. Arrow keys move between dates.`}>{cells.map((day,i)=>{
     if(!day)return <span key={`blank-${i}`} className="contribution-cell empty" aria-hidden="true"/>;
     const label=`${formatter.format(new Date(`${day.date}T00:00:00Z`))}: ${day.count} ${day.count===1?"contribution":"contributions"}`;
-    return <Tooltip.Root key={day.date}><Tooltip.Trigger asChild><button type="button" className="contribution-cell" data-level={levels[day.level]} data-date={day.date} aria-label={label} onClick={()=>setActiveDate(day.date)} onFocus={()=>setActiveDate(day.date)} onKeyDown={event=>{
+    return <Tooltip.Root key={day.date}><Tooltip.Trigger asChild><motion.button type="button" className="contribution-cell" data-level={levels[day.level]} data-date={day.date} aria-label={label} onClick={()=>setActiveDate(day.date)} onFocus={()=>setActiveDate(day.date)} onKeyDown={event=>{
       const direction=event.key==="ArrowRight"?7:event.key==="ArrowLeft"?-7:event.key==="ArrowDown"?1:event.key==="ArrowUp"?-1:0;
       if(!direction)return;event.preventDefault();const target=cells[i+direction];if(target)ref.current?.querySelector<HTMLButtonElement>(`[data-date="${target.date}"]`)?.focus();
-    }}/></Tooltip.Trigger><Tooltip.Portal><Tooltip.Content className="graph-tooltip" sideOffset={7}>{label}<Tooltip.Arrow/></Tooltip.Content></Tooltip.Portal></Tooltip.Root>;
+    }} initial={false} animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.6 }} transition={{ duration: 0.35, delay: Math.min(i * 0.004, 0.9), ease: EASE }} /></Tooltip.Trigger><Tooltip.Portal><Tooltip.Content className="graph-tooltip" sideOffset={7}>{label}<Tooltip.Arrow/></Tooltip.Content></Tooltip.Portal></Tooltip.Root>;
   })}</div></div></Tooltip.Provider>}<div className="contribution-legend"><span aria-live="polite">{activeDay?`${activeDay.date}: ${activeDay.count} ${activeDay.count===1?"contribution":"contributions"}`:"Every square is a real day. Focus to explore."}</span><span className="legend-scale">Less {[0,1,2,3,4].map(i=><i key={i} style={{background:`var(--heat-${i})`}}/>)} More</span></div></div>;
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { MotionProvider, ScrollProgress } from "@/components/motion";
+import { SmoothScroll } from "@/components/smooth-scroll";
+import { PageTransition } from "@/components/page-transition";
 import { Footer, Navigation } from "@/components/shell";
 import { profile } from "@/lib/content";
 import { ogImage, siteDescription, siteUrl } from "@/lib/seo";
@@ -29,5 +31,5 @@ const structuredData = {
 const themeScript = `try{var t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en" data-theme="dark" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeScript}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structuredData).replace(/</g,"\\u003c")}}/></head><body><a href="#main-content" className="skip-link">Skip to content</a><MotionProvider><ScrollProgress/><Navigation/><div className="site-shell"><main id="main-content" tabIndex={-1}>{children}</main><Footer/></div></MotionProvider></body></html>;
+  return <html lang="en" data-theme="dark" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeScript}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structuredData).replace(/</g,"\\u003c")}}/></head><body><a href="#main-content" className="skip-link">Skip to content</a><MotionProvider><SmoothScroll/><ScrollProgress/><Navigation/><div className="site-shell"><main id="main-content" tabIndex={-1}><PageTransition>{children}</PageTransition></main><Footer/></div></MotionProvider></body></html>;
 }

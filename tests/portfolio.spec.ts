@@ -11,7 +11,7 @@ test("home renders real content without overflow at desktop, phone and landscape
   const errors:string[]=[];
   page.on("pageerror",error=>errors.push(error.message));
   await page.goto(origin);
-  await expect(page.getByRole("heading",{name:/Intelligent systems\.\s*Engineered to last\./})).toBeVisible();
+  await expect(page.getByRole("heading",{name:/Better backends\.\s*More dependable AI\./})).toBeVisible();
   await expect(page.locator("#github")).toContainText("Recent public pushes");
   for(const width of [1440,1024,768,640,375,320,812]) {
     await page.setViewportSize({width,height:width===812?375:1000});
@@ -34,14 +34,15 @@ test("navigation, searchable command palette and empty search state", async ({ p
   await expect(dialog).toContainText("No matches");
   await page.getByRole("textbox").fill("SkillVector");
   await dialog.getByRole("link",{name:"PROJECT SkillVector"}).click();
-  await expect(page).toHaveURL(/\/work\/skillvector$/);
+  await expect(page).toHaveURL(/\/work\/skillvector\/$/);
   await expect(dialog).not.toBeVisible();
   await page.keyboard.press("Control+k");
   await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
   await page.getByRole("navigation",{name:"Primary navigation"}).getByRole("link",{name:"About"}).click();
-  await expect(page).toHaveURL(/\/about$/);
+  await expect(page).toHaveURL(/\/about\/$/);
+  await expect(page.getByRole("navigation",{name:"Primary navigation"}).getByRole("link",{name:"About"})).toHaveAttribute("aria-current","page");
   await expect(page.locator("#experience")).toContainText("Wikimedia Foundation");
   await expect(page.locator("#github")).toContainText("Pinned on GitHub");
 });
@@ -68,18 +69,19 @@ test("stack filters and theme preferences are accessible and persist", async ({ 
   await page.getByRole("button",{name:"AI",exact:true}).click();
   await expect(page.locator(".tech-tag")).toHaveCount(6);
   await expect(page.locator(".tech-tag")).not.toContainText(["Docker"]);
-  for(const [group,count] of [["Frontend",4],["Backend",5],["Tools",7]] as const) {
+  for(const [group,count] of [["Frontend",11],["Backend",5],["Tools",7]] as const) {
     await page.getByRole("button",{name:group,exact:true}).click();
+    await expect(page.getByRole("button",{name:group,exact:true})).toHaveAttribute("aria-pressed","true");
     await expect(page.locator(".tech-tag")).toHaveCount(count);
   }
   await page.getByRole("button",{name:"All",exact:true}).click();
-  await expect(page.locator(".tech-tag")).toHaveCount(22);
+  await expect(page.locator(".tech-tag")).toHaveCount(29);
   await page.locator(".bento-section").screenshot({path:"test-results/bento-desktop.png"});
   await page.setViewportSize({width:375,height:812});
-  const row=page.locator(".stack-row").first();
-  await row.focus();
-  await page.keyboard.press("ArrowRight");
-  await expect.poll(()=>row.evaluate(el=>el.scrollLeft)).toBeGreaterThan(0);
+  const grid=page.locator(".stack-chip-grid.is-static");
+  await grid.focus();
+  await page.keyboard.press("PageDown");
+  await expect.poll(()=>grid.evaluate(el=>el.scrollTop)).toBeGreaterThan(0);
   await page.locator(".bento-section").screenshot({path:"test-results/bento-mobile.png"});
   await page.setViewportSize({width:1440,height:1000});
   await page.getByRole("button",{name:"Switch to light theme"}).click();
@@ -135,12 +137,14 @@ test("animation responds to motion preferences and email copying reports success
   await page.goto(origin);
   const wire=page.locator(".data-wire").first();
   await expect(wire).toHaveCSS("animation-name","data-flow");
-  const portrait=page.locator(".tilt.portrait-artifact");
+  const portrait=page.locator(".portrait-artifact");
+  const hero=page.locator(".hero");
   await expect.poll(async()=>{
-    await page.mouse.move(0,0);
-    await portrait.hover({position:{x:20,y:20}});
-    return portrait.evaluate(element=>element.style.getPropertyValue("--rx"));
-  }).not.toBe("");
+    const box=(await hero.boundingBox())!;
+    await page.mouse.move(box.x+40,box.y+40);
+    await page.mouse.move(box.x+60,box.y+60,{steps:4});
+    return portrait.evaluate(element=>element.style.transform);
+  }).toMatch(/translate/);
   await page.emulateMedia({reducedMotion:"reduce"});
   await expect(wire).toHaveCSS("animation-name","none");
   await expect(portrait).toHaveCSS("transform","none");
@@ -157,9 +161,9 @@ test("core content and navigation remain usable without JavaScript", async ({ br
   const page=await context.newPage();
   await page.goto(origin);
   await expect(page.locator("h1")).toBeVisible();
-  await expect(page.getByRole("link",{name:"Explore my work"})).toBeVisible();
-  await page.getByRole("link",{name:"Explore my work"}).click();
-  await expect(page).toHaveURL(/\/work$/);
+  await expect(page.getByRole("link",{name:"See selected work"})).toBeVisible();
+  await page.getByRole("link",{name:"See selected work"}).click();
+  await expect(page).toHaveURL(/\/work\/$/);
   await expect(page.getByRole("heading",{name:"SkillVector",exact:true})).toBeVisible();
   await context.close();
 });
@@ -197,7 +201,7 @@ test("greeting follows local time and gives way to usable navigation", async ({ 
     const greeting=page.getByRole("button",{name:`${label}. Show navigation`});
     await expect(greeting).toBeVisible();
     await expect(page.locator("nav[aria-label='Primary navigation']")).toHaveAttribute("inert","");
-    await page.clock.fastForward(2500);
+    await page.clock.runFor(3000);
     await expect(greeting).not.toBeVisible();
     await expect(page.getByRole("navigation").getByRole("link",{name:"Home",exact:true})).toBeVisible();
   }
@@ -212,23 +216,27 @@ test("greeting follows local time and gives way to usable navigation", async ({ 
 test("project discovery, STAR summaries and ID card work with keyboard and mouse", async ({ page }) => {
   await page.goto(origin);
   const project=page.locator(".project-row").first();
-  await expect(project.locator(".project-star dt")).toHaveText(["situation","task","action","Response / result"]);
-  await expect(project.locator(".star-result")).toContainText("9.6s → 0.48s");
+  await expect(project.locator(".project-star dt")).toHaveText(["Problem","Goal","Approach","Result"]);
+  await expect(project.locator(".star-result")).toContainText("9.6 seconds to 0.48 seconds");
   const discover=project.locator(".discover-link");
   await discover.focus();
   await expect(discover.locator(".discover-cursor")).toHaveCSS("opacity","1");
   await page.screenshot({path:"test-results/project-discovery.png"});
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/work\/skillvector$/);
+  await expect(page).toHaveURL(/\/work\/skillvector\/$/);
   await expect(page.locator(".case-star dt")).toHaveCount(4);
-  await expect(page.locator(".case-sections")).toContainText("02 / THE TASK");
+  await expect(page.locator(".case-sections")).toContainText("02 / THE GOAL");
   await page.goto(origin);
-  const card=page.getByRole("button",{name:"Flip Pavan’s ID card"});
+  const card=page.locator(".id-card");
+  await expect(card).toHaveAttribute("aria-label","Open Pavan’s ID card");
   await card.focus();
+  await page.keyboard.press("Space");
+  await expect(card).toHaveAttribute("data-revealed","true");
+  await expect(card).toHaveAttribute("aria-label","Turn Pavan’s ID card over");
   await page.keyboard.press("Space");
   await expect(card).toHaveAttribute("data-side","back");
   await expect(card.locator(".id-back")).toHaveAttribute("aria-hidden","false");
-  await page.getByRole("button",{name:"Flip card",exact:true}).click();
+  await page.keyboard.press("Enter");
   await expect(card).toHaveAttribute("data-side","front");
   await page.emulateMedia({reducedMotion:"no-preference"});
   await expect(page.locator(".lanyard-scene")).toHaveAttribute("data-reduced-motion","false");
@@ -236,13 +244,12 @@ test("project discovery, STAR summaries and ID card work with keyboard and mouse
   await hoverLink.hover({position:{x:120,y:130}});
   await expect(hoverLink).toHaveAttribute("data-discover-active","true");
   await card.scrollIntoViewIfNeeded();
-  const box=await card.boundingBox();
-  await page.mouse.move(box!.x+100,box!.y+150);
-  await page.mouse.down();
-  await page.mouse.move(box!.x+145,box!.y+170,{steps:8});
-  await expect.poll(()=>page.locator(".lanyard-rig").evaluate(el=>el.style.transform)).not.toBe("none");
-  await page.mouse.up();
-  await expect(card).toHaveAttribute("data-side","front");
+  const scene=(await page.locator(".lanyard-scene").boundingBox())!;
+  const box=(await card.boundingBox())!;
+  await page.mouse.move(scene.x+4,box.y+box.height/2);
+  await page.mouse.move(scene.x+scene.width-4,box.y+box.height/2,{steps:24});
+  await expect(card).toHaveAttribute("data-side","back");
+  await expect.poll(()=>page.locator(".lanyard-rig").evaluate(el=>el.style.transform)).toMatch(/rotate/);
   await page.emulateMedia({reducedMotion:"reduce"});
   await page.screenshot({path:"test-results/about-id.png"});
   await page.locator("#contact").scrollIntoViewIfNeeded();
@@ -256,7 +263,7 @@ test("project discovery, STAR summaries and ID card work with keyboard and mouse
 test("canonical routes, social previews and identity schema are present", async ({ page, request }) => {
   for(const route of ["/","/about","/work","/work/skillvector","/work/flash-resume","/work/codeatlas","/notes","/notes/retrieval-before-generation"]) {
     await page.goto(`${origin}${route}`);
-    const canonical=route==="/"?"https://pavanbollepalli.me":`https://pavanbollepalli.me${route}`;
+    const canonical=route==="/"?"https://pavanbollepalli.github.io/":`https://pavanbollepalli.github.io${route}/`;
     await expect(page.locator("link[rel='canonical']")).toHaveAttribute("href",canonical);
     await expect(page.locator("meta[property='og:url']")).toHaveAttribute("content",canonical);
     await expect(page.locator("meta[name='twitter:card']")).toHaveAttribute("content","summary_large_image");
@@ -264,7 +271,7 @@ test("canonical routes, social previews and identity schema are present", async 
     const identity=await page.locator("script[type='application/ld+json']").evaluate(el=>JSON.parse(el.textContent!));
     expect(identity["@graph"][0].name).toBe("Pavan Bollepalli");
   }
-  const image=await request.get(`${origin}/opengraph-image`);
+  const image=await request.get(`${origin}/og.png`);
   expect(image.ok()).toBe(true);
   expect(image.headers()["content-type"]).toContain("image/png");
   await page.goto(origin);
@@ -283,12 +290,16 @@ test("phone touch controls expose discovery and flip the ID without hover", asyn
   await discover.scrollIntoViewIfNeeded();
   await expect(discover.locator(".discover-cursor")).toHaveCSS("opacity","1");
   await discover.tap();
-  await expect(page).toHaveURL(/\/work\/skillvector$/);
+  await expect(page).toHaveURL(/\/work\/skillvector\/$/);
   await page.goto(origin);
-  const card=page.getByRole("button",{name:"Flip Pavan’s ID card"});
+  const card=page.locator(".id-card");
+  await card.tap();
+  await expect(card).toHaveAttribute("data-revealed","true");
+  await page.waitForTimeout(900);
   await card.tap();
   await expect(card).toHaveAttribute("data-side","back");
   await page.locator(".about-teaser").screenshot({path:"test-results/about-mobile.png"});
+  await page.waitForTimeout(900);
   await card.tap();
   await expect(card).toHaveAttribute("data-side","front");
   await page.locator("#contact").screenshot({path:"test-results/contact-mobile.png"});

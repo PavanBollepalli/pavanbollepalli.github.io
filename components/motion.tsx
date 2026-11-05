@@ -36,9 +36,8 @@ const getServerMotionPreference = () => false;
 /**
  * True when the visitor's OS asks for reduced motion.
  *
- * This softens travel distances — it never switches the site's motion off. Reducing
- * opacity, scale and short slides is the intent of the setting; deleting the interface's
- * entire sense of life is not.
+ * Reduced motion removes travel (scroll drift, slides, pointer pull) and continuous loops,
+ * but keeps short opacity fades so content still arrives visibly and nothing stays hidden.
  */
 export function useReducedMotionPreference() {
   return useSyncExternalStore(subscribeMotionPreference, getMotionPreference, getServerMotionPreference);
@@ -77,14 +76,13 @@ export function Reveal({
   blur?: boolean;
 }) {
   const soft = useReducedMotionPreference();
-  const travel = soft ? y * 0.35 : y;
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: travel, filter: blur ? "blur(9px)" : "blur(0px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={soft ? { opacity: 0 } : { opacity: 0, y, filter: blur ? "blur(9px)" : "blur(0px)" }}
+      whileInView={soft ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.12, margin: "0px 0px -60px 0px" }}
-      transition={{ duration: 0.85, delay, ease: EASE }}
+      transition={{ duration: soft ? 0.3 : 0.85, delay: soft ? 0 : delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -118,9 +116,9 @@ export function Words({
           <span className="word">
             <motion.span
               className="word-inner"
-              initial={{ y: "115%", rotate: soft ? 0 : 4, opacity: 0 }}
-              animate={{ y: "0%", rotate: 0, opacity: 1 }}
-              transition={{ duration: soft ? 0.5 : duration, delay: delay + index * (soft ? stagger * 0.5 : stagger), ease: EASE }}
+              initial={soft ? { opacity: 0 } : { y: "115%", rotate: 4, opacity: 0 }}
+              animate={soft ? { opacity: 1 } : { y: "0%", rotate: 0, opacity: 1 }}
+              transition={{ duration: soft ? 0.3 : duration, delay: soft ? 0 : delay + index * stagger, ease: EASE }}
             >
               {word}
             </motion.span>
@@ -138,9 +136,9 @@ export function Word({ children, delay = 0, className = "" }: { children: ReactN
     <span className={`word ${className}`}>
       <motion.span
         className="word-inner"
-        initial={{ y: "115%", rotate: soft ? 0 : 4, opacity: 0 }}
-        animate={{ y: "0%", rotate: 0, opacity: 1 }}
-        transition={{ duration: soft ? 0.5 : 0.95, delay, ease: EASE }}
+        initial={soft ? { opacity: 0 } : { y: "115%", rotate: 4, opacity: 0 }}
+        animate={soft ? { opacity: 1 } : { y: "0%", rotate: 0, opacity: 1 }}
+        transition={{ duration: soft ? 0.3 : 0.95, delay: soft ? 0 : delay, ease: EASE }}
       >
         {children}
       </motion.span>
@@ -166,7 +164,7 @@ export function Magnetic({
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 260, damping: 22, mass: 0.5 });
   const springY = useSpring(y, { stiffness: 260, damping: 22, mass: 0.5 });
-  const pull = soft ? strength * 0.4 : strength;
+  const pull = soft ? 0 : strength;
 
   function track(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "mouse" || !ref.current) return;
@@ -222,7 +220,7 @@ export function Parallax({ children, distance = 60, className = "" }: { children
   const soft = useReducedMotionPreference();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const travel = soft ? distance * 0.3 : distance;
+  const travel = soft ? 0 : distance;
   const y = useTransform(scrollYProgress, [0, 1], [travel, -travel]);
   const smooth = useSpring(y, { stiffness: 110, damping: 26, mass: 0.4 });
   return (
@@ -232,8 +230,39 @@ export function Parallax({ children, distance = 60, className = "" }: { children
   );
 }
 
+/**
+ * Pointer-tracked spotlight border (Aceternity-style card glow).
+ * A `::before` layer fades in a radial light at the cursor and a conic
+ * ring traces the border. Purely decorative; content stays put.
+ */
+export function SpotlightCard({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const soft = useReducedMotionPreference();
+  const ref = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      ref={ref}
+      className={`spotlight-card ${className}`}
+      onPointerMove={event => {
+        if (soft || event.pointerType !== "mouse" || !ref.current) return;
+        const bounds = ref.current.getBoundingClientRect();
+        ref.current.style.setProperty("--spot-x", `${event.clientX - bounds.left}px`);
+        ref.current.style.setProperty("--spot-y", `${event.clientY - bounds.top}px`);
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /** Counts a number up the first time it scrolls into view. */
-export function CountUp({ value, decimals = 0, suffix = "", className = "" }: { value: number; decimals?: number; suffix?: string; className?: string }) {
+export function CountUp({ value, decimals = 0, suffix = "", prefix = "", className = "" }: { value: number; decimals?: number; suffix?: string; prefix?: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.6 });
   const [shown, setShown] = useState(0);
@@ -255,6 +284,7 @@ export function CountUp({ value, decimals = 0, suffix = "", className = "" }: { 
 
   return (
     <span ref={ref} className={className}>
+      {prefix}
       {shown.toFixed(decimals)}
       {suffix}
     </span>
