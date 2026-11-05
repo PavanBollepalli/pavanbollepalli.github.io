@@ -12,7 +12,7 @@ import type { Metadata } from "next";
  */
 const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "");
 export const siteUrl = configuredSiteUrl || "https://pavanbollepalli.github.io";
-export const siteDescription = "Pavan Bollepalli builds reliable APIs, fast retrieval pipelines and evidence-led AI tools. Explore SkillVector, Flash Resume, CodeAtlas and the engineering behind them.";
+export const siteDescription = "Pavan Bollepalli builds reliable APIs, fast retrieval pipelines and evidence-led AI tools. Explore SkillVector, Flash Resume and the engineering behind them.";
 
 /**
  * The social preview card. It is rendered by lib/og-card.tsx and served from a

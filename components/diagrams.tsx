@@ -308,9 +308,7 @@ export function ProjectArt({ kind }: { kind: string }) {
   const inView = useInView(ref, { once: true, amount: 0.25 });
   const shot = kind === "skillvector"
     ? { src: "/assets/skill-vector-kyzv-vercel-app.png", alt: "Live SkillVector career intelligence app" }
-    : kind === "flash-resume"
-      ? { src: "/assets/flash-resume-repo.png", alt: "Flash Resume source repository and CLI documentation" }
-      : { src: "/assets/code-atlas-xi-vercel-app.png", alt: "Live CodeAtlas repository intelligence app" };
+    : { src: "/assets/flash-resume-repo.png", alt: "Flash Resume source repository and CLI documentation" };
   return <div ref={ref} className={`project-live-shot project-live-shot-${kind}`} aria-hidden="true">
     <Image src={shot.src} alt={shot.alt} fill sizes="(max-width: 800px) 95vw, 55vw" priority={kind === "skillvector"} />
     <motion.span

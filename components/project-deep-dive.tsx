@@ -128,54 +128,6 @@ const deepDives: Record<Project["slug"], DeepDive> = {
     ],
     caveat: "Only the selected job-description text is sent to the configured AI provider. The résumé, provider key, local engine, and generated files remain on the device. Imported source résumés still need human review.",
   },
-  codeatlas: {
-    eyebrow: "SYSTEM ARCHITECTURE / REPOSITORY INTELLIGENCE",
-    title: "Turn a public repository into a source-linked map.",
-    intro: "CodeAtlas turns a public GitHub repository into an explorable map. It indexes understandable sections of the code, answers questions with links back to source files, and generates diagrams that help explain how the project fits together.",
-    flowName: "CODEBASE EXPLORER / SELECT A STEP",
-    steps: [
-      { title: "Validate the source", label: "START WITH A PUBLIC REPOSITORY", detail: "A developer pastes a GitHub link into the Next.js interface. FastAPI checks the address and applies repository-size and file-count limits before analysis." },
-      { title: "Clone and read the code", label: "SOURCE ANALYSIS", detail: "The service makes a shallow local copy, then reads supported code, configuration, and documentation. Python is read with its syntax structure; other supported languages use lighter pattern-based parsing." },
-      { title: "Build a searchable project map", label: "SEARCHABLE CODE INDEX", detail: "The code is split into meaningful sections and indexed with repository and file details. ChromaDB keeps that searchable map on disk, so a backend restart does not require a fresh index." },
-      { title: "Find and explain relevant code", label: "SOURCE-LINKED ANSWERS", detail: "A question searches the indexed source and gives the most relevant code to Groq as context. Answers stream as they are generated, with citations back to the source; a standard response format is also available." },
-      { title: "Explore and diagram", label: "05 / DASHBOARD", detail: "The Next.js dashboard combines file exploration, language statistics, chat, and Groq-generated Mermaid class, dependency, flow, or architecture diagrams. Repository metadata and diagrams persist locally." },
-    ],
-    metrics: [
-      { value: "10", label: "code sections per answer", note: "The search selects up to ten relevant sections to ground a response." },
-      { value: "100 MB", label: "maximum repository size", note: "Default limit for a single analysis; the file count is limited too." },
-      { value: "5,000", label: "maximum files scanned", note: "Default limit that keeps repository analysis bounded." },
-      { value: "Live", label: "streamed answers", note: "Explanations arrive as they are generated, with links back to source files." },
-    ],
-    capabilities: [
-      { title: "Repository dashboard", text: "A file explorer, language breakdown, architecture diagrams, and code-aware chat live together for each analyzed repository." },
-      { title: "Multi-language parsing", text: "Primary source parsers cover Python, JavaScript/JSX, TypeScript/TSX, Java, Go, Rust, C, and C++. Markdown, YAML, JSON, TOML, XML, HTML, CSS/SCSS, SQL, and shell are also supported." },
-      { title: "Grounded chat", text: "The system gives relevant indexed code to Groq as context, then returns source-linked explanations as they are written. A standard JSON response is also available." },
-      { title: "Architecture diagrams", text: "Groq generates Mermaid class, dependency, flow, and architecture views. Generated diagrams are cached with repository metadata." },
-      { title: "Persistent local state", text: "Cloned sources, ChromaDB collections, and repository metadata live in separate local runtime directories. Metadata allows dashboard recovery after a backend restart." },
-      { title: "Safe development reload", text: "The documented uv run dev command excludes cloned_repos, chroma_data, repo_metadata, and .venv from file watching so a running analysis does not restart its own server." },
-    ],
-    decisions: [
-      "Use shallow cloning, a 100 MB repository-size cap, and a 5,000-file default cap to bound repository analysis.",
-      "Use AST structure for Python and lighter regex extraction for the other documented languages.",
-      "Keep vectors and generated analysis persistent locally so reloads do not discard indexed repositories.",
-      "Stream answers over Server-Sent Events while retaining a synchronous endpoint for simpler clients.",
-      "Persist generated Mermaid output and repository metadata so diagrams do not need regeneration after restart.",
-    ],
-    repoMap: [
-      "Developer workspace · Submit a repository and explore its project dashboard",
-      "API service · Coordinate repository analysis, chat, and diagram requests",
-      "Repository intake · Validate a GitHub URL and make a bounded local clone",
-      "Code understanding · Parse supported languages and split files into searchable sections",
-      "Search and answers · Find relevant code and return source-linked explanations",
-      "Architecture views · Generate Mermaid diagrams from the analyzed repository",
-      "Local project data · Save index, repository details, and diagrams between restarts",
-    ],
-    notes: [
-      { title: "API surface", items: ["GET / and /health for service state; POST /api/repo/analyze, poll /status, read /info, or DELETE /api/repo/{id}.", "POST /api/chat/{id} streams SSE; /sync returns a JSON answer.", "POST /api/diagrams/{id}/generate accepts diagram types; GET /api/diagrams/{id} returns cached or persisted diagrams.", "Backend config includes GROQ_API_KEY, GROQ_MODEL, CHROMA_PERSIST_DIR, CLONE_DIR, REPO_METADATA_DIR, MAX_REPO_SIZE_MB, MAX_FILES, and TOP_K. Frontend API origin uses NEXT_PUBLIC_API_URL."] },
-      { title: "Local development", items: ["Start the Python API from backend/ with its environment file configured, then start the Next.js interface from frontend/.", "Development reload excludes generated repository clones, the local vector database, repository metadata, and the virtual environment so live analysis does not restart the service.", "The development workflow includes frontend lint/build checks and Python compilation checks.", "The project has no repository license yet."] },
-    ],
-    caveat: "This is an early-stage development tool. It does not yet have authentication or a durable job queue, and analysis state is held in process with local metadata. Cloned code is untrusted; production use needs sandboxing, resource controls, and reliable background jobs.",
-  },
 };
 
 const accents = { blue: "#7898ff", pink: "#ed83bd", violet: "#b29aff" } as const;

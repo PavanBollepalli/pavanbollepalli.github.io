@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Check, Code2, ShieldCheck } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Code2, ShieldCheck, Sparkles } from "lucide-react";
 import { profile, projects, notes } from "@/lib/content";
 import { CountUp, Magnetic, Reveal, SpotlightCard, Words } from "./motion";
 import { Globe, ProjectArt, StackCard, SystemSculpture, WorkstationDock } from "./diagrams";
@@ -46,12 +46,16 @@ function proofCount(proof: string): { prefix: string; value: number; decimals: n
 }
 
 export function ProjectList({ limit }: {limit?:number}) {
-  return <div className="project-list">{projects.slice(0,limit).map((project,index)=><article className={`project-row project-${project.color}`} key={project.slug} id={project.slug}>
+  const visibleProjects = projects.slice(0,limit);
+  return <div className="project-list">{visibleProjects.map((project,index)=><article className={`project-row project-${project.color}`} key={project.slug} id={project.slug}>
     <Reveal className="project-visual texture"><DiscoverLink href={`/work/${project.slug}`} label={`Explore the ${project.name} case study`}><div className="project-art"><div className="project-art-head"><span>{project.headline}</span><ArrowUpRight size={23}/></div><ProjectArt kind={project.slug}/><span className="project-art-index">SELECTED WORK / 0{index+1}</span></div></DiscoverLink></Reveal>
     <Reveal className="project-copy"><div className="project-copy-top"><span className="project-number">0{index+1}</span><span className="eyebrow">{project.type}</span></div><h3><Link href={`/work/${project.slug}`}>{project.name}</Link></h3><div className="project-impact"><strong>{(() => { const counted = proofCount(project.proof); return counted && project.slug === "skillvector" ? <><span>{counted.label}</span><CountUp value={counted.value} decimals={counted.decimals} suffix={counted.suffix}/></> : project.proof; })()}</strong><span>{project.proofLabel}</span></div>
       <dl className="project-star">{Object.entries(project.star).map(([key,value])=><div key={key} className={`star-${key}`}><dt>{{situation:"Problem",task:"Goal",action:"Approach",result:"Result"}[key as keyof typeof project.star]}</dt><dd>{value}</dd></div>)}</dl>
       <div className="tags">{project.stack.map(tag=><span key={tag}>{tag}</span>)}</div><Link href={`/work/${project.slug}`} className="text-link">Inside the build <span className="small-circle"><ArrowRight size={16}/></span></Link>
-    </Reveal></article>)}</div>;
+    </Reveal></article>)}{(!limit || limit >= projects.length) && <article className="project-row project-upcoming" aria-labelledby="upcoming-project-title">
+      <Reveal className="project-visual texture"><div className="upcoming-art" aria-hidden="true"><span className="project-art-index">FIELD NOTES / NEXT BUILD</span><div className="upcoming-orbit upcoming-orbit-one"/><div className="upcoming-orbit upcoming-orbit-two"/><div className="upcoming-orbit upcoming-orbit-three"/><div className="upcoming-core"><Sparkles size={39} strokeWidth={1.1}/><span>IN THE WORKS</span></div><div className="upcoming-signal upcoming-signal-one"><i/> SOMETHING NEW</div><div className="upcoming-signal upcoming-signal-two">DETAILS SOON <i/></div><div className="upcoming-coordinate">GUNTUR / INDIA</div></div></Reveal>
+      <Reveal className="project-copy upcoming-copy"><div className="project-copy-top"><span className="project-number">NEXT</span><span className="eyebrow">CURRENTLY IN THE LAB</span></div><h3 id="upcoming-project-title">Something interesting is taking shape.</h3><p>I’m building the next thing now. I’ll share the story when it’s ready to be explored.</p><a href={`${profile.github}?tab=repositories`} className="text-link" target="_blank" rel="noreferrer">Follow the next build <span className="small-circle"><ArrowUpRight size={16}/></span></a></Reveal>
+    </article>}</div>;
 }
 
 export function AboutTeaser() {
@@ -66,7 +70,6 @@ export function SiteExplore() {
   return <section className="site-explore framed" id="more"><SectionHeading eyebrow="MY SITE" title="Explore, experiment" accent="& say hello." centered/><div className="site-explore-grid texture">
     <Link href="/uses" className="site-explore-card site-tools-card"><span className="eyebrow">WORKSTATION</span><h3>Everything on my desk and dock</h3><div className="site-tools-dock"><WorkstationDock/></div><small>HARDWARE · EDITOR · TERMINAL · TOOLS</small><span className="site-card-arrow"><ArrowRight size={18}/></span></Link>
     <Link href="/about#experience" className="site-explore-card site-about-card"><span className="eyebrow">BEHIND THE CODE</span><h3>Journey, skills &amp; experience</h3><div className="site-id-preview"><Image src="/assets/avatar.jpg" alt="Pavan Bollepalli" width={220} height={260} sizes="120px"/></div><span className="site-card-arrow"><ArrowRight size={18}/></span></Link>
-    <Link href="/guestbook" className="site-explore-card site-guestbook-card"><span className="eyebrow">GUESTBOOK</span><h3>Sign the wall, leave a note</h3><div className="site-note-stack" aria-hidden="true"><span>Good work, keep building.</span><span>Thoughtful details matter.</span><span>Your note here →</span></div><span className="site-card-arrow"><ArrowRight size={18}/></span></Link>
   </div></section>;
 }
 
@@ -76,6 +79,10 @@ export function Contact() {
 
 export function Experience() {
   return <section id="experience" className="experience-section framed"><SectionHeading eyebrow="THE JOURNEY" title="Real code." accent="Real responsibility."/><TracingTimeline entries={[
+    { id: "freelance",
+      meta: <span className="eyebrow">AUG 2025 — APR 2026</span>,
+      body: <><h3>Freelance Software Developer</h3><span className="experience-role"><em>Self-employed</em></span><p>Built and deployed <strong>5 full-stack applications</strong> to individual client specifications, using FastAPI, Next.js, and LLM/RAG features. Hosted the applications on Vercel and Render.</p><p>Owned each project end to end, from requirements and architecture through deployment and handover, managing scope changes and revision cycles.</p><div className="tags"><span>FastAPI</span><span>Next.js</span><span>LLM / RAG</span><span>Vercel</span><span>Render</span></div></>,
+      metric: <><strong><CountUp value={5}/></strong><small>full-stack applications</small></> },
     { id: "wikimedia",
       meta: <><span className="eyebrow">JUL 2024 — SEP 2025</span><span className="experience-location">Remote · Open source</span></>,
       body: <><h3>Wikimedia Foundation</h3><span className="experience-role">Open Source Developer</span><p>Built a Python, Streamlit and MySQL dashboard for exploring Wikipedia editor contribution trends. Composite indexes and query restructuring reduced SQL execution time by about 25% on test copies of production data.</p><p>Created reusable query modules with unit tests, replacing one-off analysis scripts. Contributions passed international code review and were merged into the main repository.</p><div className="tags"><span>Python</span><span>MySQL</span><span>Streamlit</span><span>Query optimisation</span></div></>,

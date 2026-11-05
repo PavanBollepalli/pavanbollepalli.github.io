@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BookOpen, Github, Globe2, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Github, Globe2, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 import { PageHeading, Contact } from "@/components/sections";
 import { BlogExplorer } from "@/components/blog-explorer";
 import { Reveal } from "@/components/motion";
@@ -10,10 +10,6 @@ export function BlogIndex() {
   return <><PageHeading eyebrow="FROM THE BACKEND" title="Thoughts &" accent="field notes." description="Notes on the systems I build, the decisions behind them, and what I learn along the way."/><BlogExplorer/><Contact/></>;
 }
 
-export function GuestbookPage() {
-  return <><PageHeading eyebrow="THE GUESTBOOK" title="Leave a little" accent="signal." description="A portfolio is better when it starts a conversation. Tell me what you noticed, what you are building, or what I should explore next."/><section className="guestbook-panel framed texture"><Reveal className="guestbook-card"><span className="guestbook-icon"><BookOpen size={25}/></span><span className="eyebrow">A NOTE TO THE BUILDER</span><h2>The wall is open.</h2><p>Have a thought about the work or an idea to share? Email me a note, and I'll add it to the guestbook with your permission.</p><a className="button button-primary" href={`mailto:${profile.email}?subject=${encodeURIComponent("A note for your guestbook")}`}>Write a note <ArrowUpRight size={17}/></a></Reveal></section><Contact/></>;
-}
-
 export function UsesPage() {
   return <><PageHeading eyebrow="TOOLS, SOFTWARE & GEAR" title="The desk behind" accent="the work." description="A practical setup for building, testing, reviewing, and shipping backend and AI products."/><section className="uses-showcase framed texture" aria-label="Workstation and daily tools"><Reveal className="uses-desk-card"><span className="eyebrow">WORKSTATION</span><h2>Everything on my desk and dock</h2><p>The apps I reach for to think, build, and ship.</p><WorkstationDock/><span className="uses-desk-caption micro">AI PAIRING · EDITOR · TERMINAL · CONTAINERS · VERSION CONTROL</span></Reveal><Reveal className="uses-stack-card" delay={0.08}><StackCard/></Reveal></section><Contact/></>;
 }
@@ -21,7 +17,7 @@ export function UsesPage() {
 const milestones = [
   { date: "2026", title: "Build systems that earn trust", body: "Keep pushing backend and AI work toward clear evidence, reliable behavior, and maintainable code.", state: "IN PROGRESS" },
   { date: "2025", title: "Contribute to Wikimedia", body: "Shipped community insights tooling and query improvements through open source review.", state: "SHIPPED" },
-  { date: "2024—26", title: "Build and share useful tools", body: "SkillVector, Flash Resume, and CodeAtlas explore grounded retrieval, evidence checks, and repository intelligence.", state: "SHIPPED" },
+  { date: "2024—26", title: "Build and share useful tools", body: "SkillVector and Flash Resume explore grounded retrieval and evidence checks. More ideas are on the way.", state: "SHIPPED" },
   { date: "NEXT", title: "Keep learning in public", body: "Write about the decisions behind the work and keep contributing to projects other people can use.", state: "ONGOING" },
 ];
 

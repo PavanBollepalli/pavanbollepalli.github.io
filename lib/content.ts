@@ -46,25 +46,6 @@ export const projects = [
     decision: "A pip-installable CLI and Chrome extension send selected job text to a local FastAPI daemon. Groq extracts keywords; Gemini plans small edits. An evidence gate checks every claim, and local Typst + pypdf verify the PDF is one page.",
     boundary: "The coverage score shows how many extracted job requirements have résumé evidence; it does not predict an ATS score or interview outcome. Imported résumés need human review. The configured AI provider processes the submitted job description, so local-first does not mean offline.",
   },
-  {
-    slug: "codeatlas", repo: "CodeAtlas", name: "CodeAtlas", type: "REPOSITORY INTELLIGENCE", color: "violet",
-    headline: "Find your way around unfamiliar code.",
-    description: "Ask questions about a public GitHub repository, follow answers to source files, and explore its architecture.",
-    stack: ["FastAPI", "ChromaDB", "Groq", "Next.js", "Mermaid"],
-    proof: "Citations", proofLabel: "answers grounded in indexed source code",
-    star: {
-      situation: "Understanding a new codebase means tracing files, following dependencies, and piecing together how the system is organized.",
-      task: "Help engineers find relevant code, ask questions about it, and see how the main parts fit together.",
-      action: "The prototype indexes a public repository, finds relevant code for a question, and streams an answer with links back to the source. A separate step creates a Mermaid architecture diagram.",
-      result: "A working prototype returns source-linked answers and architecture diagrams. No adoption or performance claims are made.",
-    },
-    url: "https://code-atlas-xi.vercel.app",
-    source: "https://github.com/PavanBollepalli/CodeAtlas",
-    points: ["Parses code from multiple languages", "Searches indexed source files for relevant context", "Answers questions with links to source code", "Creates Mermaid architecture diagrams"],
-    problem: "Getting started in an unfamiliar codebase can require hours of following file trees and dependencies before an engineer understands where a feature lives.",
-    decision: "Validate and shallow-clone a public repository, split source files into searchable sections, and store their vector representations in ChromaDB. Retrieve relevant sections for a streamed answer with source citations. Generate Mermaid views of the architecture separately.",
-    boundary: "This is a development-stage project. The repository documents production hardening still needed: sandboxed workers, authentication, durable job state and resource limits. No adoption or performance metrics are claimed.",
-  },
 ] as const;
 
 export type Project = (typeof projects)[number];

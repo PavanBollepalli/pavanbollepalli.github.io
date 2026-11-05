@@ -8,10 +8,11 @@ import { Contact } from "@/components/sections";
 import { Reveal } from "@/components/motion";
 import { ContainerScroll } from "@/components/container-scroll";
 import { ProjectDeepDive } from "@/components/project-deep-dive";
+import { RedirectTo } from "@/components/redirect";
 import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
-  return projects.map(project => ({ slug: project.slug }));
+  return [...projects.map(project => ({ slug: project.slug })), { slug: "codeatlas" }];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -23,6 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === "codeatlas") return <RedirectTo href="/work" label="That project is no longer featured. Explore the current work and see what’s coming next."/>;
   const project = projects.find(item => item.slug === slug);
   if (!project) notFound();
   const starLabels = { situation: "Problem", task: "Goal", action: "Approach", result: "Result" };
